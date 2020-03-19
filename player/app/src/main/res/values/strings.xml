@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">shareMusicPlayer</string>
+    <string name="edit_message">Enter a message</string>
+
+    <string name="open_drawer">打开侧边栏</string>
+    <string name="close_drawer">关闭侧边栏</string>
+
+    <string name="app_title">音乐播放器</string>
+
+    <string name="music_title">我的音乐</string>
+    <string name="discover_title">发现</string>
+    <string name="my_area_title">我的圈子</string>
+
+    <string name="personal">个人中心</string>
+    <string name="my_message">我的消息</string>
+    <string name="my_friend">我的好友</string>
+
+    <string name="system">系统设置</string>
+    <string name="system_help">帮助</string>
+    <string name="system_about">关于</string>
+</resources>
