@@ -5,28 +5,45 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.example.sharemusicplayer.musicPlayer.activities.DetailActivity;
+import com.example.sharemusicplayer.musicPlayer.activities.PlayerActivity;
 import com.example.sharemusicplayer.musicPlayer.fragment.MainFragment;
+import com.example.sharemusicplayer.myPlace.fragment.MyPlaceFragment;
+import com.example.sharemusicplayer.recommend.fragment.RecommendFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends PlayerActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ViewPager viewPager;
-    Fragment[] tabFragment = {new MainFragment(), new MainFragment(), new MainFragment()};
+    Fragment[] tabFragment = {new MainFragment(), new RecommendFragment(), new MyPlaceFragment()};
     String[] tabTitle;
+
+
+    private View mTitleView;
+    private View mTimeView;
+    private View mDurationView;
+    private View mProgressView;
+    private View mFabView;
 
 
     @Override
@@ -56,6 +73,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        // 获取播放器动画视图
+        //
+        mTitleView = findViewById(R.id.player_title);
+        mTimeView = findViewById(R.id.player_time);
+        mDurationView = findViewById(R.id.player_duration);
+        mProgressView = findViewById(R.id.player_progress);
+        mFabView = findViewById(R.id.player_fab);
     }
 
     @Override
@@ -104,5 +129,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public CharSequence getPageTitle(int position) {
             return MainActivity.this.tabTitle[position];
         }
+    }
+
+    public void onFabClick(View view) {
+        //noinspection unchecked
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
+                new Pair<>(mTitleView, ViewCompat.getTransitionName(mTitleView)),
+                new Pair<>(mTimeView, ViewCompat.getTransitionName(mTimeView)),
+                new Pair<>(mDurationView, ViewCompat.getTransitionName(mDurationView)),
+                new Pair<>(mProgressView, ViewCompat.getTransitionName(mProgressView)),
+                new Pair<>(mFabView, ViewCompat.getTransitionName(mFabView)));
+        ActivityCompat.startActivity(this, new Intent(this, DetailActivity.class), options.toBundle());
     }
 }

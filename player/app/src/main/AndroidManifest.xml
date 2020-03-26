@@ -9,12 +9,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".musicPlayer.activities.SongsActivity"></activity>
+
+        <service
+            android:name=".musicPlayer.music.PlayerService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".musicPlayer.activities.DetailActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
