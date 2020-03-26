@@ -64,7 +64,8 @@ public abstract class PlayerActivity extends AppCompatActivity {
             mDurationView.setText(DateUtils.formatElapsedTime(duration));
         }
         if (mProgressView != null) {
-            mProgressView.setProgress(position);
+            int percentage = (int) (position / (duration * 1.0) * 100);
+            mProgressView.setProgress(percentage);
         }
     }
 
@@ -102,11 +103,21 @@ public abstract class PlayerActivity extends AppCompatActivity {
         mUpdateProgressHandler.removeMessages(0);
     }
 
-    public void play() {
-        mService.play();
+    public boolean play() {
+        if (mService.isPlaying()) {
+            mService.pause();
+            return false;
+        } else {
+            mService.play();
+            return true;
+        }
     }
 
-    public void pause() {
-        mService.pause();
+    public void next() {
+        mService.next();
+    }
+
+    public void before() {
+        mService.before();
     }
 }

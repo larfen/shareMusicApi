@@ -142,6 +142,7 @@
 
         <ImageView
             android:id="@+id/rewind"
+            android:onClick="rewindClick"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -149,6 +150,7 @@
 
         <ImageView
             android:id="@+id/forward"
+            android:onClick="forwardClick"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
