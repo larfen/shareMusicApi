@@ -22,34 +22,32 @@ public class DetailActivity extends PlayerActivity {
         setContentView(R.layout.activity_detail);
 
         mCoverView = (MusicCoverView) findViewById(R.id.cover);
-        mCoverView.setCallbacks(new MusicCoverView.Callbacks() {
-            @Override
-            public void onMorphEnd(MusicCoverView coverView) {
-                // Nothing to do
-            }
-
-            @Override
-            public void onRotateEnd(MusicCoverView coverView) {
-                supportFinishAfterTransition();
-            }
-        });
 
         getWindow().getSharedElementEnterTransition().addListener(new TransitionAdapter() {
             @Override
             public void onTransitionEnd(Transition transition) {
-                DetailActivity.this.play();
                 mCoverView.start();
             }
         });
     }
 
+    public void rewindClick(View view) {
+        before();
+    }
+    public void forwardClick(View view) {
+        next();
+    }
+
     @Override
     public void onBackPressed() {
-        onFabClick(null);
+        supportFinishAfterTransition();
     }
 
     public void onFabClick(View view) {
-        pause();
-        mCoverView.stop();
+        if (play()) {
+            mCoverView.start();
+        } else {
+            mCoverView.stop();
+        }
     }
 }

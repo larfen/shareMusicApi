@@ -65,7 +65,7 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        String[] temp = { getResources().getString(R.string.music_title), getResources().getString(R.string.discover_title), getResources().getString(R.string.my_area_title)};
+        String[] temp = {getResources().getString(R.string.music_title), getResources().getString(R.string.discover_title), getResources().getString(R.string.my_area_title)};
         this.tabTitle = temp;
         // 设置pageView
         viewPager = findViewById(R.id.page_view);
@@ -75,7 +75,6 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
         tabLayout.setupWithViewPager(viewPager);
 
         // 获取播放器动画视图
-        //
         mTitleView = findViewById(R.id.player_title);
         mTimeView = findViewById(R.id.player_time);
         mDurationView = findViewById(R.id.player_duration);
@@ -132,7 +131,10 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
     }
 
     public void onFabClick(View view) {
-        //noinspection unchecked
+        play();
+    }
+
+    public void onFooterLick(View view) {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                 new Pair<>(mTitleView, ViewCompat.getTransitionName(mTitleView)),
                 new Pair<>(mTimeView, ViewCompat.getTransitionName(mTimeView)),
