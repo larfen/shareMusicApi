@@ -20,9 +20,9 @@
             android:transitionName="@string/app_title">
 
             <TextView
+                android:id="@+id/song_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Instant Crush"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
@@ -33,9 +33,9 @@
                 android:textColor="?android:attr/textColorSecondary" />
 
             <TextView
+                android:id="@+id/artist"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Daft Punk"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="?android:attr/textColorSecondary" />
 

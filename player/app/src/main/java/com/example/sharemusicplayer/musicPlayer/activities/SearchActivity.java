@@ -53,11 +53,12 @@ public class SearchActivity extends PlayerActivity {
 
         // 当搜索确认时 发送后台请求获取歌曲信息
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView =
+        final SearchView searchView =
                 (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
                 SearchActivity.this.search(query, new BaseHttpService.CallBack() {
                     @Override
                     public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {

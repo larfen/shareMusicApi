@@ -28,6 +28,12 @@ import com.example.sharemusicplayer.httpService.BaseHttpService;
 import com.example.sharemusicplayer.httpService.SongService;
 import com.example.sharemusicplayer.musicPlayer.music.PlayerService;
 import com.example.sharemusicplayer.musicPlayer.view.ProgressView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
 
 /**
  * 所有播放器的基类
@@ -39,11 +45,11 @@ public abstract class PlayerActivity extends AppCompatActivity {
     private SongService songService = SongService.getInstance();
 
     // 动画切换场景
-    private View mTitleView;
+    private View mTitleAnimation;
     private View mTimeAnimation;
     private View mDurationAnimation;
     private View mProgressAnimation;
-    private View mFabView;
+    private View mFabAnimation;
 
     private PlayerService mService;
     private boolean mBound = false;
@@ -52,6 +58,10 @@ public abstract class PlayerActivity extends AppCompatActivity {
     private TextView mTimeView;
     private TextView mDurationView;
     private ProgressView mProgressView;
+    private TextView songNameTextView;
+    private TextView artistTextView;
+    private FloatingActionButton mFabView;
+
     private final Handler mUpdateProgressHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -63,6 +73,7 @@ public abstract class PlayerActivity extends AppCompatActivity {
     };
     /**
      * Defines callbacks for service binding, passed to bindService()
+     * 当服务绑定完成后 注册相应的可观察数据
      */
     private final ServiceConnection mConnection = new ServiceConnection() {
 
@@ -71,6 +82,55 @@ public abstract class PlayerActivity extends AppCompatActivity {
             // We've bound to PlayerService, cast the IBinder and get PlayerService instance
             PlayerService.LocalBinder binder = (PlayerService.LocalBinder) service;
             mService = binder.getService();
+            mService.getNowPlayingSong().subscribe(new Observer<Song>() {
+                @Override
+                public void onSubscribe(@NonNull Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(@NonNull Song song) {
+                    if (song != null) {
+                        PlayerActivity.this.setPlayerMessage(song);
+                    }
+                }
+
+                @Override
+                public void onError(@NonNull Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+
+            mService.playing.subscribe(new Observer<Boolean>() {
+                @Override
+                public void onSubscribe(@NonNull Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(@NonNull Boolean playing) {
+                    if (playing) {
+                        mFabView.setImageResource(R.drawable.ic_pause_animatable);
+                    } else {
+                        mFabView.setImageResource(R.drawable.ic_play_animatable);
+                    }
+                }
+                @Override
+                public void onError(@NonNull Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
+
+                }
+            });
+            onServiceFinish();
             mBound = true;
             onBind();
         }
@@ -84,6 +144,7 @@ public abstract class PlayerActivity extends AppCompatActivity {
 
     /**
      * 更新播放器进度条
+     *
      * @param position
      * @param duration
      */
@@ -108,20 +169,26 @@ public abstract class PlayerActivity extends AppCompatActivity {
     }
 
     /**
+     * ;
      * 获取播放器组件
+     *
      * @param layoutResID
      */
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
-        mTimeView = findViewById(R.id.player_time);
-        mDurationView = findViewById(R.id.player_duration);
-        mProgressView = findViewById(R.id.player_progress);
-        mTitleView = findViewById(R.id.player_title);
-        mFabView = findViewById(R.id.player_fab);
-        mTimeAnimation = findViewById(R.id.player_time);
+        mTitleAnimation = findViewById(R.id.player_title);
+        mFabAnimation = findViewById(R.id.player_fab);
         mDurationAnimation = findViewById(R.id.player_duration);
         mProgressAnimation = findViewById(R.id.player_progress);
+        mTimeAnimation = findViewById(R.id.player_time);
+
+        mTimeView = (TextView) mTimeAnimation;
+        mDurationView = (TextView) mDurationAnimation;
+        mProgressView = (ProgressView) mProgressAnimation;
+        mFabView = (FloatingActionButton) mFabAnimation;
+        songNameTextView = findViewById(R.id.song_name);
+        artistTextView = findViewById(R.id.artist);
     }
 
     @Override
@@ -136,6 +203,7 @@ public abstract class PlayerActivity extends AppCompatActivity {
 
     /**
      * 点击播放按钮时 播放或暂停音乐
+     *
      * @param view
      */
     public void onFabClick(View view) {
@@ -144,20 +212,22 @@ public abstract class PlayerActivity extends AppCompatActivity {
 
     /**
      * 当点击下方播放条时 进入播放详情activity
+     *
      * @param view
      */
     public void onFooterLick(View view) {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                new Pair<>(mTitleView, ViewCompat.getTransitionName(mTitleView)),
+                new Pair<>(mTitleAnimation, ViewCompat.getTransitionName(mTitleAnimation)),
                 new Pair<>(mTimeAnimation, ViewCompat.getTransitionName(mTimeView)),
                 new Pair<>(mDurationAnimation, ViewCompat.getTransitionName(mDurationView)),
                 new Pair<>(mProgressAnimation, ViewCompat.getTransitionName(mProgressView)),
-                new Pair<>(mFabView, ViewCompat.getTransitionName(mFabView)));
+                new Pair<>(mFabAnimation, ViewCompat.getTransitionName(mFabAnimation)));
         ActivityCompat.startActivity(this, new Intent(this, DetailActivity.class), options.toBundle());
     }
 
     /**
      * 搜索歌曲
+     *
      * @param keyword
      * @param callBack
      */
@@ -167,6 +237,7 @@ public abstract class PlayerActivity extends AppCompatActivity {
 
     /**
      * 设置播放列表 此时播放位置会从头开始
+     *
      * @param songs
      */
     public void setPlayList(Song[] songs) {
@@ -175,6 +246,7 @@ public abstract class PlayerActivity extends AppCompatActivity {
 
     /**
      * 设置播放列表
+     *
      * @param songs
      * @param position
      */
@@ -192,7 +264,8 @@ public abstract class PlayerActivity extends AppCompatActivity {
 
     /**
      * 播放音乐或暂停音乐
-     * @return  返回播放或暂停音乐
+     *
+     * @return 返回播放或暂停音乐
      */
     public boolean play() {
         if (mService.isPlaying()) {
@@ -202,6 +275,10 @@ public abstract class PlayerActivity extends AppCompatActivity {
             mService.play();
             return true;
         }
+    }
+
+    public BehaviorSubject<Song> getNowPlayingSong() {
+        return mService.getNowPlayingSong();
     }
 
     /**
@@ -218,6 +295,15 @@ public abstract class PlayerActivity extends AppCompatActivity {
         mService.before();
     }
 
+    /**
+     * 设置当前播放的信息(歌名 歌手)
+     * @param song
+     */
+    public void setPlayerMessage(Song song) {
+        songNameTextView.setText(song.getName());
+        artistTextView.setText(song.getArtist());
+    }
+
     private void onBind() {
         mUpdateProgressHandler.sendEmptyMessage(0);
     }
@@ -225,4 +311,9 @@ public abstract class PlayerActivity extends AppCompatActivity {
     private void onUnbind() {
         mUpdateProgressHandler.removeMessages(0);
     }
+
+    // 当服务绑定完成后会调 字类覆盖
+    public void onServiceFinish() {
+    }
+
 }

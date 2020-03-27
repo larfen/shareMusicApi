@@ -2,7 +2,6 @@ package com.example.sharemusicplayer.musicPlayer.music;
 
 import android.app.Service;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
@@ -17,6 +16,8 @@ import com.example.sharemusicplayer.entity.Song;
 import java.io.IOException;
 import java.util.HashMap;
 
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class PlayerService extends Service {
     HashMap header = new HashMap(); // 请求头
@@ -24,6 +25,10 @@ public class PlayerService extends Service {
     int position = 1;   // 当前播放歌曲
     Song[] songList = {};   // 歌曲列表
     boolean isPause = false;    // 是否暂停
+    BehaviorSubject<Song> nowPlayingMusic = BehaviorSubject.createDefault(new Song());  // 当前播放的音乐
+    public BehaviorSubject<Boolean> playing = BehaviorSubject.createDefault(false);    // 是否在播放音乐
+
+
     private final IBinder mBinder = new LocalBinder();
 
 
@@ -50,6 +55,7 @@ public class PlayerService extends Service {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mp.start();
+                nowPlayingMusic.onNext(songList[position]);
             }
         });
         // 播放完毕后播放下一首
@@ -69,6 +75,7 @@ public class PlayerService extends Service {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+        this.nowPlayingMusic.onComplete();
         return super.onUnbind(intent);
     }
 
@@ -105,6 +112,7 @@ public class PlayerService extends Service {
                 }
             }
             isPause = false;
+            playing.onNext(true);
         }
     }
 
@@ -141,6 +149,7 @@ public class PlayerService extends Service {
 
     /**
      * 是否播放中
+     *
      * @return
      */
     public boolean isPlaying() {
@@ -154,11 +163,13 @@ public class PlayerService extends Service {
         if (isPlaying()) {
             mediaPlayer.pause();
             isPause = true;
+            playing.onNext(false);
         }
     }
 
     /**
      * 获取当前播放进度
+     *
      * @return
      */
     public int getPosition() {
@@ -170,6 +181,7 @@ public class PlayerService extends Service {
 
     /**
      * 设置播放列表 同时位置归0
+     *
      * @param songList
      */
     public void settingPlayList(Song[] songList) {
@@ -179,6 +191,7 @@ public class PlayerService extends Service {
 
     /**
      * 获取总时长
+     *
      * @return
      */
     public int getDuration() {
@@ -186,6 +199,10 @@ public class PlayerService extends Service {
             return mediaPlayer.getDuration() / 1000;
         }
         return 0;
+    }
+
+    public BehaviorSubject<Song> getNowPlayingSong() {
+        return this.nowPlayingMusic;
     }
 
     /**
