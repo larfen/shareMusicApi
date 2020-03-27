@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sharemusicplayer.R;
+import com.example.sharemusicplayer.entity.Song;
 import com.example.sharemusicplayer.musicPlayer.view.SongsAdapter;
 
 public class SongsActivity extends PlayerActivity {
@@ -23,9 +24,8 @@ public class SongsActivity extends PlayerActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new SongsAdapter(10);
+        mAdapter = new SongsAdapter(new Song[0], null);
         recyclerView.setAdapter(mAdapter);
-
 
     }
 }

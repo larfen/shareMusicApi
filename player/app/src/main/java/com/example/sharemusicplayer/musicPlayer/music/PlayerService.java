@@ -2,24 +2,33 @@ package com.example.sharemusicplayer.musicPlayer.music;
 
 import android.app.Service;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 
-import java.io.IOException;
+import androidx.annotation.RequiresApi;
 
+import com.example.sharemusicplayer.entity.Song;
+
+import java.io.IOException;
+import java.util.HashMap;
+
+import io.reactivex.rxjava3.subjects.BehaviorSubject;
+
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class PlayerService extends Service {
-    private static final String TAG = PlayerService.class.getSimpleName();
-    private static final int DURATION = 335;
-    private MediaPlayer mediaPlayer;
-    String[] songsUrl = {"http://tyst.migu.cn/public%2Fproduct5th%2Fproduct34%2F2019%2F07%2F1822%2F2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF%2F%E5%85%A8%E6%9B%B2%E8%AF%95%E5%90%AC%2FMp3_64_22_16%2F60054701923.mp3",
-            "http://tyst.migu.cn/public%2Fproduct5th%2Fproduct35%2F2019%2F10%2F1618%2F2009%E5%B9%B406%E6%9C%8826%E6%97%A5%E5%8D%9A%E5%B0%94%E6%99%AE%E6%96%AF%2F%E5%85%A8%E6%9B%B2%E8%AF%95%E5%90%AC%2FMp3_64_22_16%2F60054701934.mp3"};
-    int position = 1;
-    boolean isPause = false;
-    // Binder given to clients
+    HashMap header = new HashMap(); // 请求头
+    private MediaPlayer mediaPlayer;    // 播放器
+    int position = 1;   // 当前播放歌曲
+    Song[] songList = {};   // 歌曲列表
+    boolean isPause = false;    // 是否暂停
+    BehaviorSubject<Song> nowPlayingMusic = BehaviorSubject.createDefault(new Song());  // 当前播放的音乐
+    public BehaviorSubject<Boolean> playing = BehaviorSubject.createDefault(false);    // 是否在播放音乐
+
+
     private final IBinder mBinder = new LocalBinder();
 
 
@@ -33,7 +42,6 @@ public class PlayerService extends Service {
         mediaPlayer.setLooping(false);
         mediaPlayer.setVolume(0.5f, 0.5f);
         mediaPlayer.setWakeMode(this, PowerManager.PARTIAL_WAKE_LOCK);
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         // 设置播放错误监听
         mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
@@ -47,15 +55,17 @@ public class PlayerService extends Service {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 mp.start();
+                nowPlayingMusic.onNext(songList[position]);
             }
         });
-        // 播放下一首
+        // 播放完毕后播放下一首
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
                 next();
             }
         });
+        this.initHeader();
         return mBinder;
     }
 
@@ -65,51 +75,103 @@ public class PlayerService extends Service {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+        this.nowPlayingMusic.onComplete();
         return super.onUnbind(intent);
     }
 
-    public void play() {
-        if (isPause) {
-            mediaPlayer.start();
-        } else {
-            // 从当前位置循环播放
-            mediaPlayer.reset();
-            Uri uri = Uri.parse(songsUrl[position]);
-            try {
-                mediaPlayer.setDataSource(this, uri);
-                mediaPlayer.prepareAsync();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        isPause = false;
+    /**
+     * 初始化播放器请求头
+     */
+    public void initHeader() {
+        this.header.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3");
+        this.header.put("Cache-Control", "no-cache");
+        this.header.put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
+        this.header.put("Accept-Language", "zh-CN,zh;q=0.9");
+        this.header.put("Cache-Control", " no-cache");
+        this.header.put("Connection", "keep-alive");
+        this.header.put("Host", "m8.music.126.net");
     }
 
+    /**
+     * 根据当前歌曲列表位置播放歌曲
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void play() {
+        if (songList.length > 0) {
+            if (isPause) {
+                mediaPlayer.start();
+            } else {
+                // 从当前位置循环播放
+                mediaPlayer.reset();
+                Uri uri = Uri.parse(songList[position].getSong_url());
+                try {
+                    mediaPlayer.setDataSource(this, uri, new HashMap<String, String>());
+                    mediaPlayer.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            isPause = false;
+            playing.onNext(true);
+        }
+    }
+
+    /**
+     * 下一首
+     */
     public void next() {
-        position = (position + 1) % songsUrl.length;
+        position = (position + 1) % songList.length;
         play();
     }
+
+    /**
+     * 上一首
+     */
     public void before() {
         if (position == 0) {
-            position = songsUrl.length - 1;
+            position = songList.length - 1;
         } else {
             --position;
         }
         play();
     }
 
+    public void setPosition(int position) {
+        if (position > songList.length) {
+            this.position = songList.length;
+        } else if (position < 0) {
+            this.position = 0;
+        } else {
+            this.position = position;
+        }
+    }
 
+
+    /**
+     * 是否播放中
+     *
+     * @return
+     */
     public boolean isPlaying() {
         return mediaPlayer.isPlaying();
     }
 
+    /**
+     * 暂停播放器
+     */
     public void pause() {
         if (isPlaying()) {
             mediaPlayer.pause();
             isPause = true;
+            playing.onNext(false);
         }
     }
 
+    /**
+     * 获取当前播放进度
+     *
+     * @return
+     */
     public int getPosition() {
         if (mediaPlayer != null && (isPlaying() || isPause)) {
             return mediaPlayer.getCurrentPosition() / 1000;
@@ -117,11 +179,30 @@ public class PlayerService extends Service {
         return 0;
     }
 
+    /**
+     * 设置播放列表 同时位置归0
+     *
+     * @param songList
+     */
+    public void settingPlayList(Song[] songList) {
+        this.songList = songList;
+        this.position = 0;
+    }
+
+    /**
+     * 获取总时长
+     *
+     * @return
+     */
     public int getDuration() {
         if (mediaPlayer != null && (isPlaying() || isPause)) {
             return mediaPlayer.getDuration() / 1000;
         }
         return 0;
+    }
+
+    public BehaviorSubject<Song> getNowPlayingSong() {
+        return this.nowPlayingMusic;
     }
 
     /**

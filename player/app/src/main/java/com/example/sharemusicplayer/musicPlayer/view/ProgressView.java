@@ -17,7 +17,7 @@ public class ProgressView extends View {
     private static final float STROKE_SIZE = 4;
     private static final float START_ANGLE = 135;
     private static final float MIDDLE_ANGLE = 270;
-    private static final float GAP_ANGLE = 90;
+    private static final float GAP_ANGLE = 10;
     private static final float FULLPROGRESS_ANGLE = 360 - GAP_ANGLE;
 
     private final RectF mBounds = new RectF();
