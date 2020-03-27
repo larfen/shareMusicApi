@@ -13,7 +13,7 @@ async def hello(request):
     async with aiohttp.ClientSession(timeout=timeout) as session:
         neteaseMusicService.session = session
         netease_result = await neteaseMusicService.search(request.match_info['name'])
-        return web.json_response(json.dumps([ob.__dict__ for ob in netease_result]))
+        return web.json_response([obj.to_dict() for obj in netease_result])
 
 
 app = web.Application()

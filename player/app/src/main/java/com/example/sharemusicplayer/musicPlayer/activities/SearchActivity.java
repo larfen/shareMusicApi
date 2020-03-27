@@ -1,16 +1,25 @@
 package com.example.sharemusicplayer.musicPlayer.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.sharemusicplayer.R;
+import com.example.sharemusicplayer.entity.Song;
+import com.example.sharemusicplayer.httpService.BaseHttpService;
+import com.example.sharemusicplayer.musicPlayer.view.SongsAdapter;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends PlayerActivity {
+
+    private RecyclerView recyclerView;
+    private SongsAdapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private Song[] searchSongs = {};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +29,21 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
         getSupportActionBar().setDisplayShowTitleEnabled(false);    // 不显示标题
+
+        recyclerView = findViewById(R.id.songs_view);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        // 当点击时 切换播放列表
+        mAdapter = new SongsAdapter(searchSongs, new SongsAdapter.SongClickListener() {
+            @Override
+            public void onClick(Song song, int position) {
+                setPlayList(searchSongs, position);
+                replay();
+            }
+        });
+
+        recyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -34,7 +58,13 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                System.out.println(query);
+                SearchActivity.this.search(query, new BaseHttpService.CallBack() {
+                    @Override
+                    public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                        searchSongs = (Song[]) result.getData();
+                        mAdapter.setSongs(searchSongs);
+                    }
+                });
                 return false;
             }
 

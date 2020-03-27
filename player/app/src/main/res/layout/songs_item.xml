@@ -1,36 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="80dp"
     android:background="?attr/selectableItemBackground"
     android:minHeight="64dp">
 
     <ImageView
-        android:id="@+id/mtrl_list_item_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/pic_url"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
         android:padding="16dp"/>
 
     <TextView
-        android:id="@+id/mtrl_list_item_text"
+        android:id="@+id/artist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/mtrl_list_item_icon"
+        android:layout_toEndOf="@id/pic_url"
         android:paddingTop="16dp"
         android:paddingEnd="16dp"
-        android:text="当爱已成往事"
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textColor="@color/mtrl_list_item_tint"/>
 
     <TextView
-        android:id="@+id/mtrl_list_item_secondary_text"
+        android:id="@+id/album"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/mtrl_list_item_text"
+        android:layout_below="@id/artist"
         android:layout_gravity="center_vertical"
-        android:text="张国荣"
-        android:layout_toEndOf="@id/mtrl_list_item_icon"
+        android:layout_toEndOf="@id/pic_url"
         android:paddingEnd="16dp"
         android:maxLines="2"
         android:textAppearance="?attr/textAppearanceBody2"

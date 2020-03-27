@@ -4,10 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
-import androidx.core.view.ViewCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -18,9 +14,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.sharemusicplayer.musicPlayer.activities.DetailActivity;
 import com.example.sharemusicplayer.musicPlayer.activities.PlayerActivity;
 import com.example.sharemusicplayer.musicPlayer.activities.SearchActivity;
 import com.example.sharemusicplayer.musicPlayer.fragment.MainFragment;
@@ -38,19 +32,10 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
     Fragment[] tabFragment = {new MainFragment(), new RecommendFragment(), new MyPlaceFragment()};
     String[] tabTitle;
 
-
-    private View mTitleView;
-    private View mTimeView;
-    private View mDurationView;
-    private View mProgressView;
-    private View mFabView;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // 设置顶部导航栏
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -73,15 +58,13 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        // 获取播放器动画视图
-        mTitleView = findViewById(R.id.player_title);
-        mTimeView = findViewById(R.id.player_time);
-        mDurationView = findViewById(R.id.player_duration);
-        mProgressView = findViewById(R.id.player_progress);
-        mFabView = findViewById(R.id.player_fab);
     }
 
+    /**
+     * 创建option菜单
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -91,7 +74,7 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
 
     /**
      * 当options menu点击时事件
-     *
+     *  点击搜索进入搜索界面
      * @param item
      * @return
      */
@@ -109,13 +92,7 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        System.out.println(item);
         return false;
-    }
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
     }
 
 
@@ -146,27 +123,4 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
         }
     }
 
-    /**
-     * 点击播放按钮时 播放或暂停音乐
-     *
-     * @param view
-     */
-    public void onFabClick(View view) {
-        play();
-    }
-
-    /**
-     * 当点击下方播放条时 进入播放详情activity
-     *
-     * @param view
-     */
-    public void onFooterLick(View view) {
-        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
-                new Pair<>(mTitleView, ViewCompat.getTransitionName(mTitleView)),
-                new Pair<>(mTimeView, ViewCompat.getTransitionName(mTimeView)),
-                new Pair<>(mDurationView, ViewCompat.getTransitionName(mDurationView)),
-                new Pair<>(mProgressView, ViewCompat.getTransitionName(mProgressView)),
-                new Pair<>(mFabView, ViewCompat.getTransitionName(mFabView)));
-        ActivityCompat.startActivity(this, new Intent(this, DetailActivity.class), options.toBundle());
-    }
 }

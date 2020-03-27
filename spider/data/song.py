@@ -8,3 +8,6 @@ class Song(object):
         self.song_url = song_url
         self.pic_url = pic_url
         self.origin = origin
+
+    def to_dict(self):
+        return {"name": self.name, "artist": self.artist, "album": self.album,"song_url": self.song_url, "pic_url": self.pic_url, "origin": self.origin}
