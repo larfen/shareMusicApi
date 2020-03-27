@@ -3,7 +3,6 @@ package com.example.sharemusicplayer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
@@ -23,6 +22,7 @@ import android.view.View;
 
 import com.example.sharemusicplayer.musicPlayer.activities.DetailActivity;
 import com.example.sharemusicplayer.musicPlayer.activities.PlayerActivity;
+import com.example.sharemusicplayer.musicPlayer.activities.SearchActivity;
 import com.example.sharemusicplayer.musicPlayer.fragment.MainFragment;
 import com.example.sharemusicplayer.myPlace.fragment.MyPlaceFragment;
 import com.example.sharemusicplayer.recommend.fragment.RecommendFragment;
@@ -89,9 +89,22 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
         return true;
     }
 
+    /**
+     * 当options menu点击时事件
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.app_bar_search:
+                Intent intent = new Intent(this, SearchActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -106,6 +119,9 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
     }
 
 
+    /**
+     * 定义pageTab切换的fragment
+     */
     public class MainPagerAdapter extends FragmentPagerAdapter {
 
         public MainPagerAdapter(@NonNull FragmentManager fm, int behavior) {
@@ -130,10 +146,20 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
         }
     }
 
+    /**
+     * 点击播放按钮时 播放或暂停音乐
+     *
+     * @param view
+     */
     public void onFabClick(View view) {
         play();
     }
 
+    /**
+     * 当点击下方播放条时 进入播放详情activity
+     *
+     * @param view
+     */
     public void onFooterLick(View view) {
         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,
                 new Pair<>(mTitleView, ViewCompat.getTransitionName(mTitleView)),
