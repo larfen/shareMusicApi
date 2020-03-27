@@ -65,7 +65,7 @@ public class SearchActivity extends PlayerActivity {
                         mAdapter.setSongs(searchSongs);
                     }
                 });
-                return false;
+                return true;
             }
 
             @Override

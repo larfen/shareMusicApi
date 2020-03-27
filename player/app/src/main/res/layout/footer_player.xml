@@ -7,6 +7,7 @@
 
     <LinearLayout
         android:id="@+id/footer_player"
+        android:onClick="onFooterLick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -47,11 +48,11 @@
 
             <TextView
                 android:id="@+id/player_time"
-                tools:text="02:30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:transitionName="progress" />
+                android:transitionName="progress"
+                tools:text="02:30" />
 
             <com.example.sharemusicplayer.musicPlayer.view.ProgressView
                 android:id="@+id/player_progress"
@@ -64,11 +65,11 @@
 
             <TextView
                 android:id="@+id/player_duration"
-                tools:text="04:30"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:transitionName="duration" />
+                android:transitionName="duration"
+                tools:text="04:30" />
 
             <Space
                 android:id="@+id/fab_placeholder"
@@ -90,6 +91,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:onClick="onFabClick"
         android:scaleType="center"
         android:transitionName="fab"
         app:fabSize="mini"
