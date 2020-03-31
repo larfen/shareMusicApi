@@ -259,6 +259,7 @@ public abstract class PlayerActivity extends AppCompatActivity {
      * 从当前位置重新播放
      */
     public void replay() {
+        mService.isPause = false;
         mService.play();
     }
 

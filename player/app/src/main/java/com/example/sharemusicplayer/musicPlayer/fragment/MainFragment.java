@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.sharemusicplayer.R;
+import com.example.sharemusicplayer.entity.OriginType;
+import com.example.sharemusicplayer.entity.PlayList;
 import com.example.sharemusicplayer.musicPlayer.view.PlayListAdapter;
 
 public class MainFragment extends Fragment {
@@ -32,19 +33,12 @@ public class MainFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.main_fragment, container, false);
-        recyclerView =  view.findViewById(R.id.my_recycler_view);
-
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
+        recyclerView = view.findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
-
-        // use a linear layout manager
         gridLayoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(gridLayoutManager);
-
-        // specify an adapter (see also next example)
-
-        mAdapter = new PlayListAdapter( new String[]{"2", "3", "4", "5", "3", "4", "5", "3", "4", "5"});
+        PlayList[] playLists = {};
+        mAdapter = new PlayListAdapter(playLists, OriginType.LOCAL);
         recyclerView.setAdapter(mAdapter);
         return view;
     }
@@ -52,7 +46,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
         // TODO: Use the ViewModel
     }
 

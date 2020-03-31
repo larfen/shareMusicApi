@@ -7,4 +7,24 @@
         <item name="colorPrimaryDark">#232F34</item>
         <item name="colorAccent">#F9AA33</item>
     </style>
+
+    <style name="rank_image">
+        <item name="android:layout_height">150dp</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="rank_title">
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:paddingLeft">8dp</item>
+    </style>
+
+    <style name="primaryText">
+        <item name="android:textColor">#161515</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="recommendText" parent="primaryText">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">5dp</item>
+    </style>
 </resources>
