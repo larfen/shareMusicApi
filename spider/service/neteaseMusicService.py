@@ -3,6 +3,8 @@
 # 根据关键词搜索歌曲
 import asyncio
 import functools
+
+from data.paly_list import PlayList
 from data.song import Song
 
 url = 'http://localhost:3000'
@@ -56,7 +58,7 @@ async def search(key):
                 result.append(
                     Song(item['name'], item['artists'][0]['name'], item['album']['name'], id_url_map[item['id']],
                          album_url_map[item['album']['id']],
-                         'neteaseMusic'))
+                         'neteaseMusic', item['id'], item['album']['id']))
         return result
 
 
@@ -70,3 +72,51 @@ async def find(id):
 async def album(id):
     async with session.get(url + '/album', params={'id': str(id)}) as resp:
         return await resp.json()
+
+
+# 获取排行榜歌曲
+async def find_top_list(id):
+    async with session.get(url + '/top/list', params={'idx': str(id)}) as resp:
+        res = await resp.json()
+        songs_list = res['playlist']['tracks']
+        # 转化为song实体
+        result = []
+        for item in songs_list:
+            result.append(Song(item['name'], item['ar'][0]['name'], item['al']['name'], None, item['al']['picUrl'],
+                               'neteaseMusic',
+                               item['id'], item['al']['id']))
+        return result
+
+
+# 根据歌曲id获取歌曲连接
+async def find_song_link(id):
+    async with session.get(url + '/song/url', params={'id': str(id)}) as resp:
+        res = await resp.json()
+        return res['data'][0]['url']
+
+
+# 进行登陆 返回登陆后的session
+async def login(phone, password):
+    await session.get(url + '/login/cellphone', params={'phone': str(phone), 'password': password})
+
+
+# 获取推荐歌单
+async def commend_play_list():
+    async with session.get(url + '/recommend/resource') as resp:
+        res = await resp.json()
+        result = []
+        for item in res['recommend']:
+            result.append(PlayList(item['name'], item['copywriter'], item['id'], item['picUrl']))
+        return result
+
+
+# 获取每日歌曲推荐
+async def commend_songs():
+    async with session.get(url + '/recommend/songs') as resp:
+        res = await resp.json()
+        result = []
+        for item in res['recommend']:
+            result.append(
+                Song(item['name'], item['artists'][0]['name'], item['album']['name'], None, item['album']['picUrl'],
+                     'neteaseMusic', item['id'], item['album']['id']))
+        return result
