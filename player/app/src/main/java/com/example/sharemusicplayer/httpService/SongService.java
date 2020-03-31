@@ -60,9 +60,19 @@ public class SongService {
 
     /**
      * 推荐歌曲
+     *
      * @param callBack
      */
     public void recommendSongs(BaseHttpService.CallBack callBack) {
         httpService.get("recommend/songs", callBack, Song[].class);
+    }
+
+    /**
+     * 歌单详情
+     * @param callBack
+     * @param id
+     */
+    public void playlistDetail(BaseHttpService.CallBack callBack, Long id) {
+        httpService.get("playlist/detail/" + id, callBack, Song[].class);
     }
 }

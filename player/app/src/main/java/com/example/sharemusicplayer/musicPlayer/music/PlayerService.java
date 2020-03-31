@@ -26,7 +26,7 @@ public class PlayerService extends Service {
     private MediaPlayer mediaPlayer;    // 播放器
     int position = 1;   // 当前播放歌曲
     Song[] songList = {};   // 歌曲列表
-    boolean isPause = false;    // 是否暂停
+    public boolean isPause = false;    // 是否暂停
     SongService songService = SongService.getInstance();
     BehaviorSubject<Song> nowPlayingMusic = BehaviorSubject.createDefault(new Song());  // 当前播放的音乐
     public BehaviorSubject<Boolean> playing = BehaviorSubject.createDefault(false);    // 是否在播放音乐

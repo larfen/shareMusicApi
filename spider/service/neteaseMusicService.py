@@ -17,23 +17,10 @@ async def search(key):
         search_res = await resp.json()
 
         songs = search_res['result']['songs']
-        ids = ''
         album_ids = []
         # 提取出歌曲id和专辑id
         for item in songs:
-            ids += str(item['id']) + ','
             album_ids.append(item['album']['id'])
-
-        # 根据歌曲id获取歌曲链接 保存到map中
-        id_url_map = {}
-        song_url_task = asyncio.create_task(find(ids[:-1]))
-
-        def when_song_url_finish(task):
-            songs_url_res = task.result()
-            for item in songs_url_res['data']:
-                id_url_map[item['id']] = item['url']
-
-        song_url_task.add_done_callback(when_song_url_finish)
 
         # 根据专辑id获取专辑图片链接  保存到map中
         album_tasks = []
@@ -49,16 +36,15 @@ async def search(key):
             task.add_done_callback(functools.partial(when_album_done, id))
             album_tasks.append(task)
 
-        await asyncio.gather(song_url_task, asyncio.gather(*album_tasks))
+        await asyncio.gather(*album_tasks)
 
         # 获取完毕 解析实体
         result = []
         for item in songs:
-            if id_url_map[item['id']] is not None:
-                result.append(
-                    Song(item['name'], item['artists'][0]['name'], item['album']['name'], id_url_map[item['id']],
-                         album_url_map[item['album']['id']],
-                         'neteaseMusic', item['id'], item['album']['id']))
+            result.append(
+                Song(item['name'], item['artists'][0]['name'], item['album']['name'], None,
+                     album_url_map[item['album']['id']],
+                     'neteaseMusic', item['id'], item['album']['id']))
         return result
 
 
@@ -119,4 +105,18 @@ async def commend_songs():
             result.append(
                 Song(item['name'], item['artists'][0]['name'], item['album']['name'], None, item['album']['picUrl'],
                      'neteaseMusic', item['id'], item['album']['id']))
+        return result
+
+
+# 获取歌单详情
+async def play_list_detail(id):
+    async with session.get(url + '/playlist/detail', params={'id': str(id)}) as resp:
+        res = await resp.json()
+        # 解析结果
+        result = []
+        for item in res['playlist']['tracks']:
+            result.append(
+                Song(item['name'], item['ar'][0]['name'], item['al']['name'], None, item['al']['picUrl'],
+                     'neteaseMusic',
+                     item['id'], item['al']['id']))
         return result

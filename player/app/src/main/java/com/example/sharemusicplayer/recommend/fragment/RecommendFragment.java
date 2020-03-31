@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.example.sharemusicplayer.MainActivity;
 import com.example.sharemusicplayer.R;
+import com.example.sharemusicplayer.entity.OriginType;
 import com.example.sharemusicplayer.entity.PlayList;
 import com.example.sharemusicplayer.entity.Song;
 import com.example.sharemusicplayer.httpService.BaseHttpService;
@@ -29,12 +30,23 @@ import com.example.sharemusicplayer.recommend.activities.TopListActivity;
 import java.util.Arrays;
 
 public class RecommendFragment extends Fragment {
+    /**
+     * 排行榜
+     */
     public static final String EXTRA_TOP_LIST_ID = "top_list_id";
+    public static final String EXTRA_TOP_LIST_NAME = "top_list_name";
+    public static final String EXTRA_TOP_LIST_IMAGE = "top_list_image";
+
+    /**
+     * 推荐歌单
+     */
     private RecyclerView playListView;
     private PlayListAdapter playListAdapter;
     private GridLayoutManager gridLayoutManager;
 
-
+    /**
+     * 推荐歌曲
+     */
     private RecyclerView songsView;
     private SongsAdapter songsAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -59,6 +71,8 @@ public class RecommendFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), TopListActivity.class);
                 intent.putExtra(EXTRA_TOP_LIST_ID, 1L);
+                intent.putExtra(EXTRA_TOP_LIST_NAME, R.string.top_list_1);
+                intent.putExtra(EXTRA_TOP_LIST_IMAGE, R.drawable.hot_songs);
                 getContext().startActivity(intent);
             }
         });
@@ -69,6 +83,8 @@ public class RecommendFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), TopListActivity.class);
                 intent.putExtra(EXTRA_TOP_LIST_ID, 0L);
+                intent.putExtra(EXTRA_TOP_LIST_NAME, R.string.top_list_2);
+                intent.putExtra(EXTRA_TOP_LIST_IMAGE, R.drawable.new_songs);
                 getContext().startActivity(intent);
             }
         });
@@ -79,6 +95,8 @@ public class RecommendFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), TopListActivity.class);
                 intent.putExtra(EXTRA_TOP_LIST_ID, 3L);
+                intent.putExtra(EXTRA_TOP_LIST_NAME, R.string.top_list_3);
+                intent.putExtra(EXTRA_TOP_LIST_IMAGE, R.drawable.up_songs);
                 getContext().startActivity(intent);
             }
         });
@@ -88,7 +106,7 @@ public class RecommendFragment extends Fragment {
         playListView.setHasFixedSize(true);
         gridLayoutManager = new GridLayoutManager(getContext(), 2);
         playListView.setLayoutManager(gridLayoutManager);
-        playListAdapter = new PlayListAdapter(new PlayList[0]);
+        playListAdapter = new PlayListAdapter(new PlayList[0], OriginType.NETEASE_MUSIC);
         playListView.setAdapter(playListAdapter);
         songService.recommendPlayList(new BaseHttpService.CallBack() {
             @Override
