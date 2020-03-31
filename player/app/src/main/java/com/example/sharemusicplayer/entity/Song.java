@@ -8,6 +8,8 @@ public class Song {
     private String song_url;    // 歌曲链接
     private String pic_url;     // 图片链接
     private String origin;      // 来源
+    private Long song_id;   // 外部歌曲id
+    private Long album_id;       // 专辑id
 
     public Long getId() {
         return id;
@@ -63,5 +65,21 @@ public class Song {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    public Long getSong_id() {
+        return song_id;
+    }
+
+    public void setSong_id(Long song_id) {
+        this.song_id = song_id;
+    }
+
+    public Long getAlbum_id() {
+        return album_id;
+    }
+
+    public void setAlbum_id(Long album_id) {
+        this.album_id = album_id;
     }
 }

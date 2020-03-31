@@ -12,6 +12,8 @@ import android.os.PowerManager;
 import androidx.annotation.RequiresApi;
 
 import com.example.sharemusicplayer.entity.Song;
+import com.example.sharemusicplayer.httpService.BaseHttpService;
+import com.example.sharemusicplayer.httpService.SongService;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class PlayerService extends Service {
     int position = 1;   // 当前播放歌曲
     Song[] songList = {};   // 歌曲列表
     boolean isPause = false;    // 是否暂停
+    SongService songService = SongService.getInstance();
     BehaviorSubject<Song> nowPlayingMusic = BehaviorSubject.createDefault(new Song());  // 当前播放的音乐
     public BehaviorSubject<Boolean> playing = BehaviorSubject.createDefault(false);    // 是否在播放音乐
 
@@ -101,18 +104,34 @@ public class PlayerService extends Service {
             if (isPause) {
                 mediaPlayer.start();
             } else {
-                // 从当前位置循环播放
-                mediaPlayer.reset();
-                Uri uri = Uri.parse(songList[position].getSong_url());
-                try {
-                    mediaPlayer.setDataSource(this, uri, new HashMap<String, String>());
-                    mediaPlayer.prepareAsync();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                // 如果歌曲链接不存在 尝试根据歌曲id获取歌曲链接
+                Song song = songList[position];
+                if (song.getSong_url() == null && song.getSong_id() != null) {
+                    songService.songLink(new BaseHttpService.CallBack() {
+                        @Override
+                        public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                            String link = (String) result.getData();
+                            playByUrl(link);
+                        }
+                    }, song.getSong_id());
+                } else {
+                    playByUrl(song.getSong_url());
                 }
             }
             isPause = false;
             playing.onNext(true);
+        }
+    }
+
+    public void playByUrl(String url) {
+        // 从当前位置循环播放
+        mediaPlayer.reset();
+        Uri uri = Uri.parse(url);
+        try {
+            mediaPlayer.setDataSource(this, uri, new HashMap<String, String>());
+            mediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

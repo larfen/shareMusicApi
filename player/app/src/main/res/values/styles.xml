@@ -7,4 +7,25 @@
         <item name="colorPrimaryDark">#232F34</item>
         <item name="colorAccent">#F9AA33</item>
     </style>
+
+    <style name="OutlinedButton.IconOnly" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:minWidth">48dp</item>
+        <item name="android:minHeight">48dp</item>
+        <!--        <item name="app:backgroundTint">#1AAD19</item>-->
+    </style>
+
+    <style name="primaryText">
+        <item name="android:textColor">#161515</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="recommendText" parent="primaryText">
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">5dp</item>
+    </style>
 </resources>

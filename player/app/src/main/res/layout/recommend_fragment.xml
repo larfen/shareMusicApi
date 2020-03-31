@@ -1,13 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".recommend.fragment.RecommendFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        android:orientation="vertical">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <RelativeLayout
+                android:id="@+id/top_list_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/top_list_1_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:padding="16dp"
+                    android:src="@drawable/ic_pause_vector" />
+
+                <TextView
+                    style="@style/recommendText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/top_list_1_image"
+                    android:text="@string/top_list_1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/top_list_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/top_list_2_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:padding="16dp"
+                    android:src="@drawable/ic_pause_vector" />
+
+                <TextView
+                    style="@style/recommendText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/top_list_2_image"
+                    android:text="@string/top_list_2" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/top_list_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/top_list_3_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:padding="16dp"
+                    android:src="@drawable/ic_pause_vector" />
+
+                <TextView
+                    style="@style/recommendText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/top_list_3_image"
+                    android:text="@string/top_list_3" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommend_play_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommend_songs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
