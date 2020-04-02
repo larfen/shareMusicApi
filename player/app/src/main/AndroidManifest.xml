@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".recommend.activities.TopListActivity"></activity>
+        <activity android:name=".personal.PersonalActivity"></activity>
+        <activity android:name=".recommend.activities.TopListActivity" />
         <activity android:name=".musicPlayer.activities.SearchActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -27,7 +28,8 @@
             android:exported="true" />
 
         <activity android:name=".musicPlayer.activities.DetailActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity" />
+        <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,7 +38,7 @@
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".login.LoginActivity" />
         </activity>
     </application>
 

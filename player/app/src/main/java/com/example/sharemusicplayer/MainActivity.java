@@ -14,14 +14,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import com.example.sharemusicplayer.entity.User;
+import com.example.sharemusicplayer.httpService.UserService;
 import com.example.sharemusicplayer.musicPlayer.activities.PlayerActivity;
 import com.example.sharemusicplayer.musicPlayer.activities.SearchActivity;
 import com.example.sharemusicplayer.musicPlayer.fragment.MainFragment;
 import com.example.sharemusicplayer.myPlace.fragment.MyPlaceFragment;
+import com.example.sharemusicplayer.personal.PersonalActivity;
 import com.example.sharemusicplayer.recommend.fragment.RecommendFragment;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class MainActivity extends PlayerActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -29,8 +38,12 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ViewPager viewPager;
+    private TextView nickName;
+    private View headerLayout;
+    private CircleImageView userImage;
     Fragment[] tabFragment = {new MainFragment(), new RecommendFragment(), new MyPlaceFragment()};
     String[] tabTitle;
+    UserService userService = UserService.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +56,7 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
         // 设置侧边栏
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-
+        headerLayout = navigationView.inflateHeaderView(R.layout.header_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.close_drawer);
 
         drawerLayout.addDrawerListener(toggle);
@@ -58,10 +71,43 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
+        // 设置当前登陆用户信息
+        nickName = headerLayout.findViewById(R.id.nick_name);
+        userImage = headerLayout.findViewById(R.id.user_image);
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, PersonalActivity.class);
+                startActivity(intent);
+            }
+        });
+        userService.currentUser.subscribe(new Observer<User>() {
+            @Override
+            public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(@io.reactivex.rxjava3.annotations.NonNull User user) {
+                nickName.setText(user.getNickName());
+            }
+
+            @Override
+            public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
     }
 
     /**
      * 创建option菜单
+     *
      * @param menu
      * @return
      */
@@ -74,7 +120,8 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
 
     /**
      * 当options menu点击时事件
-     *  点击搜索进入搜索界面
+     * 点击搜索进入搜索界面
+     *
      * @param item
      * @return
      */
