@@ -8,3 +8,5 @@
 * 爬虫接口
   * 进入spider目录，使用python3 main.py 启动项目爬虫接口，监听8080端口
 * 修改安卓网络配置,res/xm/netword_secutiry_config.xml 加入当前电脑ip。
+* 启动api接口,idea导入shareApi启动spring-boot项目
+* 导入nginx配置,监听9000端口,/spider转发爬虫端口，/api转发spring-boot 端口
