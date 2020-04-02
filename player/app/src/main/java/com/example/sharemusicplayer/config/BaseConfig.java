@@ -1,6 +1,7 @@
 package com.example.sharemusicplayer.config;
 
 public class BaseConfig {
-    public final static String SPIDER_URL = "http://192.168.200.24:8080/";
-    public final static String LOCAL_URL = "http://192.168.200.24:8081/";
+    public final static String SPIDER_URL = "spider/";
+    public final static String LOCAL_URL = "api/";
+    public final static String RESOURCES_URL = "resources/";
 }

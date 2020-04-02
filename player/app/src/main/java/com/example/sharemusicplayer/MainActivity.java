@@ -18,6 +18,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.sharemusicplayer.entity.User;
+import com.example.sharemusicplayer.httpService.BaseHttpService;
+import com.example.sharemusicplayer.httpService.DownloadImageTask;
 import com.example.sharemusicplayer.httpService.UserService;
 import com.example.sharemusicplayer.musicPlayer.activities.PlayerActivity;
 import com.example.sharemusicplayer.musicPlayer.activities.SearchActivity;
@@ -91,6 +93,11 @@ public class MainActivity extends PlayerActivity implements NavigationView.OnNav
             @Override
             public void onNext(@io.reactivex.rxjava3.annotations.NonNull User user) {
                 nickName.setText(user.getNickName());
+                if (user.getImageUrl() != null && !user.getImageUrl().equals("")) {
+                    String urlString = BaseHttpService.BASE_URL + user.getImageUrl();
+                    new DownloadImageTask(userImage)
+                            .execute(urlString);
+                }
             }
 
             @Override

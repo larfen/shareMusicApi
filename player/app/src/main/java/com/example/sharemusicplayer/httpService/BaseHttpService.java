@@ -29,6 +29,8 @@ public class BaseHttpService {
 
     public static BaseHttpService baseHttpService;
 
+    public static String BASE_URL = "http://192.168.200.24:9000/";
+
     public static BaseHttpService getInstance() {
         if (baseHttpService == null) {
             baseHttpService = new BaseHttpService();
@@ -50,7 +52,7 @@ public class BaseHttpService {
      * @param params   请求参数
      */
     public <T> void get(String url, CallBack callBack, Class<T> type, Pair<String, String>... params) {
-        HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(url).newBuilder();
+        HttpUrl.Builder httpUrlBuilder = HttpUrl.parse(BASE_URL + url).newBuilder();
         if (params != null) {
             for (Pair<String, String> param :
                     params) {
@@ -75,7 +77,7 @@ public class BaseHttpService {
         Gson gson = new Gson();
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(data));
         Request request = new Request.Builder()
-                .url(url)
+                .url(BASE_URL + url)
                 .post(body)
                 .addHeader("Authorization", token)
                 .build();
@@ -84,7 +86,7 @@ public class BaseHttpService {
 
     public <T> void putByForm(String url, RequestBody body, BaseHttpService.CallBack callback, Class<T> type) {
         Request request = new Request.Builder()
-                .url(url)
+                .url(BASE_URL + url)
                 .put(body)
                 .addHeader("Authorization", token)
                 .build();
@@ -104,7 +106,7 @@ public class BaseHttpService {
         Gson gson = new Gson();
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), gson.toJson(data));
         Request request = new Request.Builder()
-                .url(url)
+                .url(BASE_URL + url)
                 .put(body)
                 .addHeader("Authorization", token)
                 .build();

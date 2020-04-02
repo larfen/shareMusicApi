@@ -5,12 +5,14 @@ import com.jdxiang.shareMusicApi.exception.NotAuthenticationException;
 import com.jdxiang.shareMusicApi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired CommonService commonService;
 
     @Autowired
     UserRepository userRepository;
@@ -50,5 +52,13 @@ public class UserServiceImpl implements UserService {
         String token = CommonService.createJwtToken(user.getId());
         response.setHeader(tokenHeader, token);
         return user;
+    }
+
+    @Override
+    public String changeImage(MultipartFile file, User user) {
+        String imageUrl = commonService.uploadImage(file);
+        user.setImageUrl(imageUrl);
+        userRepository.save(user);
+        return imageUrl;
     }
 }

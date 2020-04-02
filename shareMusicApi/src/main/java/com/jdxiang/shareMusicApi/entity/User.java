@@ -21,6 +21,8 @@ public class User {
     @JsonView(PasswordJsonView.class)
     private String password;
 
+    private String imageUrl; // 头像路径
+
 
     public Long getId() {
         return id;
@@ -52,6 +54,14 @@ public class User {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     private interface PasswordJsonView {

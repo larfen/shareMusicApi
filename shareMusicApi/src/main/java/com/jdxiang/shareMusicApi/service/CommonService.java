@@ -15,7 +15,7 @@ public interface CommonService {
     /**
      * 签名秘钥
      */
-    String SECRET = "airTicket";
+    String SECRET = "shareMusic";
 
     // 根据用户id生成token
     static String createJwtToken(Long id) {

@@ -1,10 +1,10 @@
 package com.jdxiang.shareMusicApi.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.jdxiang.shareMusicApi.entity.User;
 import com.jdxiang.shareMusicApi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,5 +28,11 @@ public class UserController {
     @GetMapping("/currentUser")
     public User getCurrentUser(HttpServletRequest request) {
         return this.userService.getCurrentUser(request);
+    }
+
+    @PutMapping("/changeImage")
+    public String changeImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        User user = userService.getCurrentUser(request);
+        return userService.changeImage(file, user );
     }
 }

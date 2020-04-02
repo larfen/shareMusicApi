@@ -9,6 +9,8 @@ public class User {
 
     private String password;
 
+    private String imageUrl; // 头像路径
+
     public User() {
 
     }
@@ -48,5 +50,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

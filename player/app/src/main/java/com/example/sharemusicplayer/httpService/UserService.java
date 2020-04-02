@@ -4,6 +4,7 @@ import com.example.sharemusicplayer.config.BaseConfig;
 import com.example.sharemusicplayer.entity.User;
 
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
+import okhttp3.RequestBody;
 
 public class UserService {
 
@@ -48,5 +49,14 @@ public class UserService {
      */
     public void getCurrentUser(BaseHttpService.CallBack callBack) {
         httpService.get(BaseConfig.LOCAL_URL + "user/currentUser", callBack, User.class);
+    }
+
+    /**
+     * 修改头像
+     * @param data
+     * @param callBack
+     */
+    public void uploadImage(RequestBody data, BaseHttpService.CallBack callBack) {
+        httpService.putByForm(BaseConfig.LOCAL_URL  + "user/changeImage", data, callBack, String.class);
     }
 }
