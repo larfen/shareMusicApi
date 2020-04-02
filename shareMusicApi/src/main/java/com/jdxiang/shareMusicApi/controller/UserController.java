@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @RequestMapping("user")
@@ -33,6 +34,11 @@ public class UserController {
     @PutMapping("/changeImage")
     public String changeImage(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         User user = userService.getCurrentUser(request);
-        return userService.changeImage(file, user );
+        return userService.changeImage(file, user);
+    }
+
+    @GetMapping("/getAllUser")
+    public List<User> getAll() {
+        return userService.getAll();
     }
 }

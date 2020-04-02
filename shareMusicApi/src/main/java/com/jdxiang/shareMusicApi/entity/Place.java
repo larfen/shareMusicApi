@@ -1,6 +1,9 @@
 package com.jdxiang.shareMusicApi.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -11,10 +14,12 @@ public class Place {
     private Long id;
 
     @OneToOne
+    @JsonView(BelongsUserJsonView.class)
     User belongUser;    // 所属用户
 
     @ManyToMany
-    List<User> allUser; // 所有用户
+    @JsonView(AllUserJsonView.class)
+    List<User> allUser = new ArrayList<>(); // 所有用户
 
     private String name; // 圈子名
 
@@ -78,5 +83,11 @@ public class Place {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public interface BelongsUserJsonView {
+    }
+
+    public interface AllUserJsonView {
     }
 }

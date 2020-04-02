@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -60,5 +61,10 @@ public class UserServiceImpl implements UserService {
         user.setImageUrl(imageUrl);
         userRepository.save(user);
         return imageUrl;
+    }
+
+    @Override
+    public List<User> getAll() {
+        return (List<User>) userRepository.findAll();
     }
 }
