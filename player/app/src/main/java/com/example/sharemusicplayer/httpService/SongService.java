@@ -1,5 +1,6 @@
 package com.example.sharemusicplayer.httpService;
 
+import com.example.sharemusicplayer.config.BaseConfig;
 import com.example.sharemusicplayer.entity.PlayList;
 import com.example.sharemusicplayer.entity.Song;
 
@@ -25,7 +26,7 @@ public class SongService {
      * @param callBack
      */
     public void search(BaseHttpService.CallBack callBack, String name) {
-        httpService.get("search/" + name, callBack, Song[].class);
+        httpService.get(BaseConfig.SPIDER_URL + "search/" + name, callBack, Song[].class);
     }
 
 
@@ -36,7 +37,7 @@ public class SongService {
      * @param id
      */
     public void topList(BaseHttpService.CallBack callBack, Long id) {
-        httpService.get("top/list/" + id, callBack, Song[].class);
+        httpService.get(BaseConfig.SPIDER_URL + "top/list/" + id, callBack, Song[].class);
     }
 
     /**
@@ -46,7 +47,7 @@ public class SongService {
      * @param id
      */
     public void songLink(BaseHttpService.CallBack callBack, Long id) {
-        httpService.get("song/link/" + id, callBack, String.class);
+        httpService.get(BaseConfig.SPIDER_URL + "song/link/" + id, callBack, String.class);
     }
 
     /**
@@ -55,7 +56,7 @@ public class SongService {
      * @param callBack
      */
     public void recommendPlayList(BaseHttpService.CallBack callBack) {
-        httpService.get("recommend/playList", callBack, PlayList[].class);
+        httpService.get(BaseConfig.SPIDER_URL + "recommend/playList", callBack, PlayList[].class);
     }
 
     /**
@@ -64,15 +65,16 @@ public class SongService {
      * @param callBack
      */
     public void recommendSongs(BaseHttpService.CallBack callBack) {
-        httpService.get("recommend/songs", callBack, Song[].class);
+        httpService.get(BaseConfig.SPIDER_URL + "recommend/songs", callBack, Song[].class);
     }
 
     /**
      * 歌单详情
+     *
      * @param callBack
      * @param id
      */
     public void playlistDetail(BaseHttpService.CallBack callBack, Long id) {
-        httpService.get("playlist/detail/" + id, callBack, Song[].class);
+        httpService.get(BaseConfig.SPIDER_URL + "playlist/detail/" + id, callBack, Song[].class);
     }
 }
