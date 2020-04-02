@@ -86,8 +86,7 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.PlayLi
                 .execute(playList.getPic_url());
     }
 
-    @Override
-    public int getItemCount() {
+    @Override    public int getItemCount() {
         return this.playLists.length;
     }
 

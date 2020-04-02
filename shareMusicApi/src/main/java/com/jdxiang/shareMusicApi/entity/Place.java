@@ -20,6 +20,8 @@ public class Place {
 
     private String desName; // 描述名
 
+    private String label; // 标签
+
     private String picUrl; // 封面
 
     public Long getId() {
@@ -68,5 +70,13 @@ public class Place {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }
