@@ -38,9 +38,10 @@
     <string name="logout">退出登陆</string>
 
     <string name="init_place">初始化圈子</string>
+    <string name="my_place">我的圈子</string>
     <string name="choose_user">选择圈子用户</string>
     <string name="place_name">圈子名称</string>
-    <string name="place_image">封面预览</string>
+    <string name="place_image">封面预览(点击修改)</string>
     <string name="place_desName">描述</string>
     <string name="place_label">标签</string>
 

@@ -93,6 +93,15 @@ public class BaseHttpService {
         new HttpTask<T>(callback, type).execute(request);
     }
 
+    public <T> void postByForm(String url, RequestBody body, BaseHttpService.CallBack callback, Class<T> type) {
+        Request request = new Request.Builder()
+                .url(BASE_URL + url)
+                .post(body)
+                .addHeader("Authorization", token)
+                .build();
+        new HttpTask<T>(callback, type).execute(request);
+    }
+
     /**
      * 发送put请求
      *

@@ -45,6 +45,7 @@ public class UserService {
 
     /**
      * 获取当前登陆用户
+     *
      * @param callBack
      */
     public void getCurrentUser(BaseHttpService.CallBack callBack) {
@@ -53,10 +54,19 @@ public class UserService {
 
     /**
      * 修改头像
+     *
      * @param data
      * @param callBack
      */
     public void uploadImage(RequestBody data, BaseHttpService.CallBack callBack) {
-        httpService.putByForm(BaseConfig.LOCAL_URL  + "user/changeImage", data, callBack, String.class);
+        httpService.putByForm(BaseConfig.LOCAL_URL + "user/changeImage", data, callBack, String.class);
+    }
+
+    /**
+     * 获取所有的用户
+     * @param callBack
+     */
+    public void getAllUser(BaseHttpService.CallBack callBack) {
+        httpService.get(BaseConfig.LOCAL_URL + "user/getAllUser", callBack, User[].class);
     }
 }

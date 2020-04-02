@@ -16,7 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sharemusicplayer.R;
+import com.example.sharemusicplayer.httpService.BaseHttpService;
+import com.example.sharemusicplayer.httpService.PlaceService;
+import com.example.sharemusicplayer.musicPlayer.music.PlayerService;
+import com.example.sharemusicplayer.myPlace.activities.ChooseUserActivity;
 import com.example.sharemusicplayer.myPlace.activities.InitPlaceActivity;
+import com.example.sharemusicplayer.myPlace.activities.MyPlaceActivity;
 import com.example.sharemusicplayer.myPlace.view.PlaceListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,12 +30,15 @@ public class MyPlaceFragment extends Fragment {
     private MyPlaceViewModel mViewModel;
 
     /**
-     * 推荐歌单
+     * 圈子列表
      */
     private RecyclerView placeListView;
     private PlaceListAdapter placeListAdapter;
     private StaggeredGridLayoutManager gridLayoutManager;
     private FloatingActionButton myPlaceBtn;
+
+
+    PlaceService placeService = PlaceService.getInstance();
 
     public static MyPlaceFragment newInstance() {
         return new MyPlaceFragment();
@@ -54,8 +62,20 @@ public class MyPlaceFragment extends Fragment {
         myPlaceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), InitPlaceActivity.class);
-                startActivity(intent);
+                // 判断是否创建过圈子 如果创建过直接进入 否则进入创建圈子界面
+                placeService.isCreatePlace(new BaseHttpService.CallBack() {
+                    @Override
+                    public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                        Boolean isCreate = (Boolean) result.getData();
+                        if (isCreate) {
+                            Intent intent = new Intent(getContext(), MyPlaceActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(getContext(), InitPlaceActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
             }
         });
         return view;

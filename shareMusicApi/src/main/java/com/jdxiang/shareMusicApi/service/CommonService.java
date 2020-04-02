@@ -16,6 +16,8 @@ public interface CommonService {
      * 签名秘钥
      */
     String SECRET = "shareMusic";
+    String IMAGE_PATH = "resources/image/";
+
 
     // 根据用户id生成token
     static String createJwtToken(Long id) {
@@ -73,4 +75,7 @@ public interface CommonService {
     String uploadImage(MultipartFile file);
 
     String sha256(String content);
+
+    String uploadImageByPath(MultipartFile file, String savePath);
+
 }

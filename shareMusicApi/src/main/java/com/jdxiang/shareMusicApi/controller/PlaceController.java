@@ -7,6 +7,7 @@ import com.jdxiang.shareMusicApi.service.PlaceService;
 import com.jdxiang.shareMusicApi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -39,18 +40,30 @@ public class PlaceController {
      */
     @PostMapping
     @JsonView(BaseJsonView.class)
-    public Place createPlace(@RequestBody Place place) {
-        return placeService.createPlace(place);
+    public Place createPlace(@RequestBody Place place, HttpServletRequest request) {
+        return placeService.createPlace(place, request);
     }
 
     /**
      * 将用户添加到圈子
+     *
      * @param id
      * @param users
      */
     @PutMapping("/addUsers/{id}")
     public void addUsersToPlace(@PathVariable Long id, @RequestBody List<User> users) {
         placeService.addUsersToPlace(id, users);
+    }
+
+    /**
+     * 上传圈子图片
+     *
+     * @param file
+     * @return
+     */
+    @PostMapping("/uploadImage")
+    public String changeImage(@RequestParam("file") MultipartFile file) {
+        return placeService.uploadImage(file);
     }
 
 

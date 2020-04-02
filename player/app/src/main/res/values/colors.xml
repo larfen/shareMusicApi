@@ -9,4 +9,6 @@
     <color name="light">#FFEEEEEE</color>
 
     <color name="dark">#222222</color>
+
+    <color name="float_btn">#1ab5ff</color>
 </resources>

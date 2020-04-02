@@ -19,7 +19,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|left"
         android:layout_margin="16dp"
-        android:tooltipText="我的圈子"
-        app:srcCompat="@drawable/ic_pause_vector" />
+        android:tooltipText="@string/my_place"
+        app:backgroundTint="@color/float_btn"
+        app:srcCompat="@drawable/ic_home_black_24dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
