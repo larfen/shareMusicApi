@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.sharemusicplayer.R;
+import com.example.sharemusicplayer.entity.Place;
 import com.example.sharemusicplayer.httpService.BaseHttpService;
 import com.example.sharemusicplayer.httpService.PlaceService;
 import com.example.sharemusicplayer.musicPlayer.music.PlayerService;
@@ -68,8 +69,16 @@ public class MyPlaceFragment extends Fragment {
                     public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
                         Boolean isCreate = (Boolean) result.getData();
                         if (isCreate) {
-                            Intent intent = new Intent(getContext(), MyPlaceActivity.class);
-                            startActivity(intent);
+                            // 获取当前登陆用户的圈子 进入圈子界面
+                            placeService.getCurrentPlace(new BaseHttpService.CallBack() {
+                                @Override
+                                public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                                    Place place = (Place) result.getData();
+                                    Intent intent = new Intent(getContext(), MyPlaceActivity.class);
+                                    intent.putExtra(MyPlaceActivity.PLACE_ID, place.getId());
+                                    startActivity(intent);
+                                }
+                            });
                         } else {
                             Intent intent = new Intent(getContext(), InitPlaceActivity.class);
                             startActivity(intent);

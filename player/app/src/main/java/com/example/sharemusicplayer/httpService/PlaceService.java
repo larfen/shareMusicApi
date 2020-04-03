@@ -53,11 +53,30 @@ public class PlaceService {
 
     /**
      * 将用户添加到圈子
+     *
      * @param callBack
      * @param id
      * @param users
      */
     public void addUsersToPlace(BaseHttpService.CallBack callBack, Long id, User[] users) {
         httpService.put(BaseConfig.LOCAL_URL + "place/addUsers/" + id, users, callBack, null);
+    }
+
+    /**
+     * 通过id获取圈子
+     *
+     * @param callBack
+     * @param id
+     */
+    public void getById(BaseHttpService.CallBack callBack, Long id) {
+        httpService.get(BaseConfig.LOCAL_URL + "place/" + id, callBack, Place.class);
+    }
+
+    /**
+     * 获取当前登陆用户的圈子
+     * @param callBack
+     */
+    public void getCurrentPlace(BaseHttpService.CallBack callBack) {
+        httpService.get(BaseConfig.LOCAL_URL + "place/currentPlace", callBack, Place.class);
     }
 }
