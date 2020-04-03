@@ -1,7 +1,10 @@
 package com.jdxiang.shareMusicApi.repository;
 
 import com.jdxiang.shareMusicApi.entity.Place;
+import com.jdxiang.shareMusicApi.entity.User;
 import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
 
 public interface PlaceRepository extends CrudRepository<Place, Long> {
 
@@ -13,7 +16,8 @@ public interface PlaceRepository extends CrudRepository<Place, Long> {
      */
     boolean existsByBelongUserId(Long id);
 
-    Place findByBelongUserId(Long id
-    );
+    Place findByBelongUserId(Long id);
+
+    List<Place> findAllByAllUser(User user);
 
 }

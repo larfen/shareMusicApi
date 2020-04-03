@@ -8,6 +8,7 @@ import com.jdxiang.shareMusicApi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -67,6 +68,7 @@ public class PlaceController {
 
     /**
      * 通过id获取圈子
+     *
      * @param id
      * @return
      */
@@ -78,6 +80,7 @@ public class PlaceController {
 
     /**
      * 获取当前登陆用户的圈子
+     *
      * @return
      */
     @GetMapping("currentPlace")
@@ -86,6 +89,17 @@ public class PlaceController {
         return placeService.getCurrentPlace();
     }
 
-    private interface BaseJsonView {
+    /**
+     * 获取当前登陆用户关联的圈子
+     *
+     * @return
+     */
+    @GetMapping("currentPlaces")
+    @JsonView(BaseJsonView.class)
+    public List<Place> getCurrentPlaces() {
+        return placeService.getByCurrentUser();
+    }
+
+    private interface BaseJsonView extends Place.BelongsUserJsonView {
     }
 }

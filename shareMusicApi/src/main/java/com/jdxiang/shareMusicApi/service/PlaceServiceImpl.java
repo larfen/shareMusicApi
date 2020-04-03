@@ -58,4 +58,10 @@ public class PlaceServiceImpl implements PlaceService {
         User user = userService.getCurrentUser(request);
         return placeRepository.findByBelongUserId(user.getId());
     }
+
+    @Override
+    public List<Place> getByCurrentUser() {
+        User user = userService.getCurrentUser(request);
+        return placeRepository.findAllByAllUser(user);
+    }
 }

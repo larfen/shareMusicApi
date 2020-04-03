@@ -25,6 +25,9 @@ public class Message {
     @JsonView(PlaceJsonView.class)
     private Place place;
 
+    @ManyToOne
+    private User user;
+
     public Long getId() {
         return id;
     }
@@ -63,6 +66,14 @@ public class Message {
 
     public void setPlace(Place place) {
         this.place = place;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public interface SongJsonView {

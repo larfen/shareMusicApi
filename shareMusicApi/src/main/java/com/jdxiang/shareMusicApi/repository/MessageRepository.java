@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MessageRepository extends CrudRepository<Message, Long> {
 
-    List<Message> findAllByPlaceId(Long id);
+    List<Message> findAllByPlaceIdOrderByIdDesc(Long id);
 }

@@ -51,4 +51,10 @@ public interface PlaceService {
      */
     Place getCurrentPlace();
 
+    /**
+     * 获取当前登陆用户的关联圈子
+     * @return
+     */
+    List<Place> getByCurrentUser();
+
 }
