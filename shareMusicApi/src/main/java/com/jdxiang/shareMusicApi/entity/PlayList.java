@@ -1,9 +1,8 @@
 package com.jdxiang.shareMusicApi.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import javax.persistence.*;
 
 @Entity
 public class PlayList {
@@ -16,6 +15,10 @@ public class PlayList {
     private String des_name;
     private Long play_list_id;
     private String pic_url;
+
+    @ManyToOne
+    @JsonView(UserJsonView.class)
+    private User user;
 
     public Long getId() {
         return id;
@@ -55,5 +58,16 @@ public class PlayList {
 
     public void setPic_url(String pic_url) {
         this.pic_url = pic_url;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public interface UserJsonView {
     }
 }

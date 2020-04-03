@@ -1,9 +1,8 @@
 package com.jdxiang.shareMusicApi.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import javax.persistence.*;
 
 @Entity
 public class Song {
@@ -19,6 +18,10 @@ public class Song {
     private String origin;      // 来源
     private Long song_id;   // 外部歌曲id
     private Long album_id;       // 专辑id
+
+    @ManyToOne
+    @JsonView(PlayListJsonView.class)
+    PlayList playList;  // 所属歌单
 
     public Long getId() {
         return id;
@@ -90,5 +93,16 @@ public class Song {
 
     public void setAlbum_id(Long album_id) {
         this.album_id = album_id;
+    }
+
+    public PlayList getPlayList() {
+        return playList;
+    }
+
+    public void setPlayList(PlayList playList) {
+        this.playList = playList;
+    }
+
+    public interface PlayListJsonView {
     }
 }
