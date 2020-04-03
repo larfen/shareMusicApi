@@ -77,4 +77,18 @@ public class SongService {
     public void playlistDetail(BaseHttpService.CallBack callBack, Long id) {
         httpService.get(BaseConfig.SPIDER_URL + "playlist/detail/" + id, callBack, Song[].class);
     }
+
+    /**
+     * 创建歌曲到歌单中 本地服务
+     * @param callBack
+     * @param playId
+     * @param song
+     */
+    public void createSongToPlayList(BaseHttpService.CallBack callBack, Long playId, Song song) {
+        httpService.post(BaseConfig.LOCAL_URL + "song/createByPlayList/" + playId, song, callBack, Song.class);
+    }
+
+    public void playListDetailForLocal(BaseHttpService.CallBack callBack, Long id) {
+        httpService.get(BaseConfig.LOCAL_URL + "song/getByPlayList/" + id, callBack, Song[].class);
+    }
 }

@@ -12,6 +12,8 @@ public interface UserService {
 
     User getCurrentUser(HttpServletRequest request);
 
+    User getCurrentUser();
+
     // 通过token登陆
     User loginByToken(String userName, String password, HttpServletResponse response);
 

@@ -115,12 +115,13 @@
             android:layout_height="wrap_content"/>
 
         <ImageView
-            android:id="@+id/shuffle"
+            android:visibility="gone"
+            android:id="@+id/add_to_play_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:src="@drawable/ic_shuffle_white_24dp"/>
+            android:src="@drawable/ic_add_circle_outline_white_24dp"/>
 
     </LinearLayout>
 

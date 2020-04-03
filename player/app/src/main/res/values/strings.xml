@@ -26,6 +26,7 @@
 
     <string name="recommend_songs">推荐歌曲</string>
     <string name="recommend_play_list">推荐歌单</string>
+    <string name="my_play_list">我的歌单</string>
 
     <string name="login_welcome">欢迎</string>
     <string name="login">登陆</string>
@@ -45,6 +46,9 @@
     <string name="place_image">封面预览(点击修改)</string>
     <string name="place_desName">描述</string>
     <string name="place_label">标签</string>
+
+    <string name="play_list_name">歌单名称</string>
+    <string name="play_list_des">歌单描述</string>
 
     <string name="play_vector_path" translatable="false">M6,5 l12,7 l0,0 l-12,0z M6,12 l12,0 l0,0 l-12,7z</string>
     <string name="pause_vector_path" translatable="false">M5,6 l14,0 l0,4 l-14,0z M5,14 l14,0 l0,4 l-14,0z</string>

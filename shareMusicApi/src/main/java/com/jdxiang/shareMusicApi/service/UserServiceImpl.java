@@ -13,10 +13,14 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired CommonService commonService;
+    @Autowired
+    CommonService commonService;
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    HttpServletRequest request;
 
     @Override
     public User getCurrentUser(HttpServletRequest request) {
@@ -28,6 +32,11 @@ public class UserServiceImpl implements UserService {
             throw new NotAuthenticationException("请先登陆");
         }
         return user;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return getCurrentUser(request);
     }
 
     @Override

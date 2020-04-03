@@ -15,11 +15,14 @@ import com.example.sharemusicplayer.entity.PlayList;
 import com.example.sharemusicplayer.httpService.DownloadImageTask;
 import com.example.sharemusicplayer.musicPlayer.activities.SongsActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 歌单适配器 用于显示歌单 carview
  */
 public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.PlayListViewHolder> {
-    PlayList[] playLists;
+    List<PlayList> playLists = new ArrayList<>();
     /**
      * 下列信息用于显示歌单的详情 主要说明点击了哪个歌单
      */
@@ -47,7 +50,10 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.PlayLi
     }
 
     public PlayListAdapter(PlayList[] playLists, OriginType type) {
-        this.playLists = playLists;
+        this.playLists = new ArrayList<>();
+        for (PlayList playList : playLists) {
+            this.playLists.add(playList);
+        }
         this.originType = type;
     }
 
@@ -65,7 +71,7 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.PlayLi
     @Override
     public void onBindViewHolder(final PlayListViewHolder holder, int position) {
         // 设置歌单的信息
-        final PlayList playList = this.playLists[position];
+        final PlayList playList = this.playLists.get(position);
         holder.nameText.setText(playList.getName());
         holder.desNameText.setText(playList.getDes_name());
 
@@ -74,24 +80,43 @@ public class PlayListAdapter extends RecyclerView.Adapter<PlayListAdapter.PlayLi
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(holder.view.getContext(), SongsActivity.class);
-                intent.putExtra(PLAY_LIST_ID, playList.getPlay_list_id());
+
                 intent.putExtra(PLAY_LIST_NAME, playList.getName());
                 intent.putExtra(PLAY_LIST_IMAGE, playList.getPic_url());
                 intent.putExtra(ORIGIN_TYPE, originType.name());
+                switch (originType) {
+                    case LOCAL:
+                        intent.putExtra(PLAY_LIST_ID, playList.getId());
+                        break;
+                    case NETEASE_MUSIC:
+                        intent.putExtra(PLAY_LIST_ID, playList.getPlay_list_id());
+                        break;
+                }
                 holder.view.getContext().startActivity(intent);
             }
         });
 
-        new DownloadImageTask(holder.playListImage)
-                .execute(playList.getPic_url());
+        if (playList.getPic_url() != null && !playList.getPic_url().equals("")) {
+            new DownloadImageTask(holder.playListImage)
+                    .execute(playList.getPic_url());
+        }
     }
 
-    @Override    public int getItemCount() {
-        return this.playLists.length;
+    @Override
+    public int getItemCount() {
+        return this.playLists.size();
     }
 
     public void setPlayLists(PlayList[] playLists) {
-        this.playLists = playLists;
+        this.playLists = new ArrayList<>();
+        for (PlayList playList : playLists) {
+            this.playLists.add(playList);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void addPlayList(PlayList playList) {
+        this.playLists.add(0, playList);
         notifyDataSetChanged();
     }
 }
