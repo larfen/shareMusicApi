@@ -73,13 +73,34 @@ public class SongsActivity extends PlayerActivity {
         new DownloadImageTask(imageView)
                 .execute(image);
 
-        songService.playlistDetail(new BaseHttpService.CallBack() {
-            @Override
-            public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
-                songs = (Song[]) result.getData();
-                mAdapter.setSongs(songs);
-            }
-        }, id);
+        // 根据来源类型获取歌单列表
+        type = OriginType.valueOf(getIntent().getStringExtra(PlayListAdapter.ORIGIN_TYPE));
+        switch (type) {
+            case NETEASE_MUSIC:
+                songService.playlistDetail(new BaseHttpService.CallBack() {
+                    @Override
+                    public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                        songs = (Song[]) result.getData();
+                        if (songs != null) {
+                            mAdapter.setSongs(songs);
+                        }
+                    }
+                }, id);
+                break;
+            case LOCAL:
+                // todo 请求后台数据库
+                songService.playListDetailForLocal(new BaseHttpService.CallBack() {
+                    @Override
+                    public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                        songs = (Song[]) result.getData();
+                        if (songs != null) {
+                            mAdapter.setSongs(songs);
+                        }
+                    }
+                }, id);
+                break;
+        }
+
         getSupportActionBar().setTitle(name);
     }
 }

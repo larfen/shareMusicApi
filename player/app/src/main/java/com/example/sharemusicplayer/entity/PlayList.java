@@ -1,10 +1,15 @@
 package com.example.sharemusicplayer.entity;
 
 public class PlayList {
+    private Long id;
     private String name;
     private String des_name;
     private Long play_list_id;
     private String pic_url;
+
+
+    private User user;
+
 
     public String getName() {
         return name;
@@ -36,5 +41,21 @@ public class PlayList {
 
     public void setPic_url(String pic_url) {
         this.pic_url = pic_url;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
