@@ -79,4 +79,12 @@ public class PlaceService {
     public void getCurrentPlace(BaseHttpService.CallBack callBack) {
         httpService.get(BaseConfig.LOCAL_URL + "place/currentPlace", callBack, Place.class);
     }
+
+    /**
+     * 获取当前登陆用户关联的圈子
+     * @param callBack
+     */
+    public void getCurrentPlaces(BaseHttpService.CallBack callBack) {
+        httpService.get(BaseConfig.LOCAL_URL + "place/currentPlaces", callBack, Place[].class);
+    }
 }

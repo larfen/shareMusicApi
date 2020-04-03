@@ -1,12 +1,14 @@
 package com.example.sharemusicplayer.personal;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -20,6 +22,7 @@ import com.example.sharemusicplayer.entity.User;
 import com.example.sharemusicplayer.httpService.BaseHttpService;
 import com.example.sharemusicplayer.httpService.DownloadImageTask;
 import com.example.sharemusicplayer.httpService.UserService;
+import com.example.sharemusicplayer.login.LoginActivity;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
@@ -39,6 +42,7 @@ public class PersonalActivity extends AppCompatActivity {
     TextView userName;
     TextView nickName;
     CircleImageView personImage;
+    AppCompatButton logoutBtn;
 
     private static final int WRITE_EXTERNAL_STORAGE_CODE = 0;
     private static final int ImageCode = 1;
@@ -50,6 +54,17 @@ public class PersonalActivity extends AppCompatActivity {
         userName = findViewById(R.id.username_tex);
         nickName = findViewById(R.id.nick_name_tex);
         personImage = findViewById(R.id.person_image);
+        logoutBtn = findViewById(R.id.logout);
+
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                logout();
+                // 返回登陆界面
+                Intent intentToLogin = new Intent(PersonalActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intentToLogin);
+            }
+        });
 
         userService.currentUser.subscribe(new Observer<User>() {
             @Override
@@ -178,5 +193,13 @@ public class PersonalActivity extends AppCompatActivity {
             new DownloadImageTask(personImage)
                     .execute(urlString);
         }
+    }
+
+    private void logout() {
+        // 退出登陆 修改basehttp token信息 并修改数据库中token
+        BaseHttpService.setToken("");
+        SharedPreferences.Editor edit = PersonalActivity.this.getSharedPreferences("user_message", MODE_PRIVATE).edit();
+        edit.putString("token", "");
+        edit.apply();
     }
 }

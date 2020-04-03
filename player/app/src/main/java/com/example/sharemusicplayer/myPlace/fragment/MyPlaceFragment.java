@@ -57,6 +57,20 @@ public class MyPlaceFragment extends Fragment {
         placeListView.setLayoutManager(gridLayoutManager);
         placeListAdapter = new PlaceListAdapter();
         placeListView.setAdapter(placeListAdapter);
+        placeListAdapter.setListener(new PlaceListAdapter.ClickListener() {
+            @Override
+            public void click(Place place, int position) {
+                Intent intent = new Intent(getContext(), MyPlaceActivity.class);
+                intent.putExtra(MyPlaceActivity.PLACE_ID, place.getId());
+                startActivity(intent);
+            }
+        });
+        placeService.getCurrentPlaces(new BaseHttpService.CallBack() {
+            @Override
+            public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                placeListAdapter.setPlaces((Place[]) result.getData());
+            }
+        });
 
         // 设置进入我的圈子
         myPlaceBtn = view.findViewById(R.id.my_place_btn);

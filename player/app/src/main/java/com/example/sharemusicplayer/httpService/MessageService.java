@@ -17,11 +17,21 @@ public class MessageService {
 
     /**
      * 创建消息
+     *
      * @param callBack
      * @param placeId
      * @param message
      */
     public void createMessage(BaseHttpService.CallBack callBack, Long placeId, Message message) {
         httpService.put(BaseConfig.LOCAL_URL + "message/" + placeId, message, callBack, Message.class);
+    }
+
+    /**
+     * 通过圈子id 获取消息
+     * @param callBack
+     * @param placeId
+     */
+    public void getMessageByPlace(BaseHttpService.CallBack callBack, Long placeId) {
+        httpService.get(BaseConfig.LOCAL_URL + "message/" + placeId, callBack, Message[].class);
     }
 }

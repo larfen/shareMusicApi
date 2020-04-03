@@ -102,6 +102,7 @@ public class ChooseUserActivity extends AppCompatActivity {
                                     Intent intent = new Intent(ChooseUserActivity.this, MyPlaceActivity.class);
                                     intent.putExtra(MyPlaceActivity.PLACE_ID, id);
                                     startActivity(intent);
+                                    finish();
                                 }
                             }
 

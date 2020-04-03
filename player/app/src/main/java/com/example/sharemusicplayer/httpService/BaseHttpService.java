@@ -12,7 +12,9 @@ import com.google.gson.JsonParseException;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
@@ -205,5 +207,19 @@ public class BaseHttpService {
      */
     public static boolean assertSuccessResponse(Response response) {
         return response.code() >= 200 && response.code() < 300;
+    }
+
+    /**
+     * 格式化日期输出
+     * MM/dd/yyyy HH:mm:ss
+     *
+     * @param date
+     * @param format
+     * @return
+     */
+    public static String dateFormat(Date date, String format) {
+        SimpleDateFormat bjSdf = new SimpleDateFormat(format);     // 北京
+        bjSdf.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+        return bjSdf.format(date);
     }
 }

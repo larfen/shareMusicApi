@@ -13,6 +13,8 @@ public class Message {
 
     private Place place;
 
+    private User user;
+
     public Long getId() {
         return id;
     }
@@ -51,5 +53,13 @@ public class Message {
 
     public void setPlace(Place place) {
         this.place = place;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

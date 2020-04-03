@@ -30,6 +30,7 @@ import com.google.gson.Gson;
 public class NewMessageActivity extends AppCompatActivity {
     public static final int SONG_RESULT = 0;    // 用于serach界面结果回调
     public static final String PLACE_ID = "place_id";
+    public static final String NEW_MESSAGE = "new_message";
 
 
     Toolbar myToolbar;
@@ -94,6 +95,9 @@ public class NewMessageActivity extends AppCompatActivity {
                 messageService.createMessage(new BaseHttpService.CallBack() {
                     @Override
                     public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra(NEW_MESSAGE, new Gson().toJson(result.getData()));
+                        setResult(Activity.RESULT_OK, returnIntent);
                         finish();
                     }
                 }, placeId, message);

@@ -99,6 +99,7 @@ public class InitPlaceActivity extends AppCompatActivity {
                         Intent intent = new Intent(InitPlaceActivity.this, ChooseUserActivity.class);
                         intent.putExtra(ChooseUserActivity.PLACE_ID, ((Place) result.getData()).getId());
                         startActivity(intent);
+                        finish();
                     }
                 });
                 return false;
