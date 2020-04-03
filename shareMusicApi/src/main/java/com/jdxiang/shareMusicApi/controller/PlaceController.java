@@ -8,7 +8,6 @@ import com.jdxiang.shareMusicApi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -66,6 +65,26 @@ public class PlaceController {
         return placeService.uploadImage(file);
     }
 
+    /**
+     * 通过id获取圈子
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}")
+    @JsonView(BaseJsonView.class)
+    public Place getById(@PathVariable Long id) {
+        return placeService.getById(id);
+    }
+
+    /**
+     * 获取当前登陆用户的圈子
+     * @return
+     */
+    @GetMapping("currentPlace")
+    @JsonView(BaseJsonView.class)
+    public Place getCurrentPlace() {
+        return placeService.getCurrentPlace();
+    }
 
     private interface BaseJsonView {
     }

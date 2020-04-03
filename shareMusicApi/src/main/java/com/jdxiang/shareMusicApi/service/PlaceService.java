@@ -38,4 +38,17 @@ public interface PlaceService {
      */
     String uploadImage(MultipartFile file);
 
+    /**
+     * 通过id获取
+     * @param id
+     * @return
+     */
+    Place getById(Long id);
+
+    /**
+     * 获取当前登陆用户的圈子
+     * @return
+     */
+    Place getCurrentPlace();
+
 }

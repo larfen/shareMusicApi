@@ -13,4 +13,7 @@ public interface PlaceRepository extends CrudRepository<Place, Long> {
      */
     boolean existsByBelongUserId(Long id);
 
+    Place findByBelongUserId(Long id
+    );
+
 }

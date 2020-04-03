@@ -1,5 +1,7 @@
 package com.jdxiang.shareMusicApi.entity;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,8 +17,13 @@ public class Message {
     @Column(columnDefinition = "text")
     private String content;    // 文本
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonView(SongJsonView.class)
     private Song song;
+
+    @ManyToOne
+    @JsonView(PlaceJsonView.class)
+    private Place place;
 
     public Long getId() {
         return id;
@@ -48,5 +55,19 @@ public class Message {
 
     public void setSong(Song song) {
         this.song = song;
+    }
+
+    public Place getPlace() {
+        return place;
+    }
+
+    public void setPlace(Place place) {
+        this.place = place;
+    }
+
+    public interface SongJsonView {
+    }
+
+    public interface PlaceJsonView {
     }
 }

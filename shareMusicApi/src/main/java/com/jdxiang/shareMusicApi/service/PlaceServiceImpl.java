@@ -16,7 +16,10 @@ public class PlaceServiceImpl implements PlaceService {
     CommonService commonService;
     @Autowired
     PlaceRepository placeRepository;
-    @Autowired UserService userService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    HttpServletRequest request;
 
     @Override
     public Boolean isCreatePlace(User user) {
@@ -43,5 +46,16 @@ public class PlaceServiceImpl implements PlaceService {
     public String uploadImage(MultipartFile file) {
         String imageUrl = commonService.uploadImageByPath(file, CommonService.IMAGE_PATH + "place/");
         return imageUrl;
+    }
+
+    @Override
+    public Place getById(Long id) {
+        return placeRepository.findById(id).get();
+    }
+
+    @Override
+    public Place getCurrentPlace() {
+        User user = userService.getCurrentUser(request);
+        return placeRepository.findByBelongUserId(user.getId());
     }
 }
