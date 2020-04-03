@@ -14,12 +14,15 @@ import java.security.NoSuchAlgorithmException;
 @Service
 public class CommonServiceImpl implements CommonService {
 
-    static final String IMAGE_PATH = "resources/image/";
-
     @Override
     public String uploadImage(MultipartFile file) {
+        return uploadImageByPath(file, IMAGE_PATH);
+    }
+
+    @Override
+    public String uploadImageByPath(MultipartFile file, String savePath) {
         String fileName = file.getOriginalFilename();
-        Path saveFilePath = Paths.get(IMAGE_PATH);
+        Path saveFilePath = Paths.get(savePath);
         // 从"."最后一次出现的位置的下一位开始截取，获取扩展名
         String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
         Path path = Paths.get(saveFilePath.toString() + "/" + sha256(fileName + System.currentTimeMillis()) + "." + ext);

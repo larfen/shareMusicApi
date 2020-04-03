@@ -29,6 +29,7 @@ import com.example.sharemusicplayer.httpService.SongService;
 import com.example.sharemusicplayer.musicPlayer.music.PlayerService;
 import com.example.sharemusicplayer.musicPlayer.view.ProgressView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observer;
@@ -82,6 +83,13 @@ public abstract class PlayerActivity extends AppCompatActivity {
             // We've bound to PlayerService, cast the IBinder and get PlayerService instance
             PlayerService.LocalBinder binder = (PlayerService.LocalBinder) service;
             mService = binder.getService();
+            mService.setNullSongLink(new PlayerService.NullSongLink() {
+                @Override
+                public void nullSongLink(Song song) {
+                    Snackbar.make(mFabView, "暂时无法播放此歌曲!", Snackbar.LENGTH_SHORT)
+                            .show();
+                }
+            });
             mService.getNowPlayingSong().subscribe(new Observer<Song>() {
                 @Override
                 public void onSubscribe(@NonNull Disposable d) {
@@ -120,6 +128,7 @@ public abstract class PlayerActivity extends AppCompatActivity {
                         mFabView.setImageResource(R.drawable.ic_play_animatable);
                     }
                 }
+
                 @Override
                 public void onError(@NonNull Throwable e) {
 
@@ -298,6 +307,7 @@ public abstract class PlayerActivity extends AppCompatActivity {
 
     /**
      * 设置当前播放的信息(歌名 歌手)
+     *
      * @param song
      */
     public void setPlayerMessage(Song song) {

@@ -1,31 +1,18 @@
-package com.jdxiang.shareMusicApi.entity;
+package com.example.sharemusicplayer.entity;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
-import javax.persistence.*;
 import java.util.Date;
 
-@Entity
 public class Message {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Date createTime; // 创建时间
 
-    @Column(columnDefinition = "text")
     private String content;    // 文本
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JsonView(SongJsonView.class)
     private Song song;
 
-    @ManyToOne
-    @JsonView(PlaceJsonView.class)
     private Place place;
 
-    @ManyToOne
     private User user;
 
     public Long getId() {
@@ -74,11 +61,5 @@ public class Message {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public interface SongJsonView {
-    }
-
-    public interface PlaceJsonView {
     }
 }

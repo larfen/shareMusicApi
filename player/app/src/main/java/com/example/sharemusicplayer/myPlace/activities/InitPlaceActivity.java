@@ -1,102 +1,75 @@
-package com.example.sharemusicplayer.personal;
+package com.example.sharemusicplayer.myPlace.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.example.sharemusicplayer.R;
-import com.example.sharemusicplayer.entity.User;
+import com.example.sharemusicplayer.entity.Place;
 import com.example.sharemusicplayer.httpService.BaseHttpService;
 import com.example.sharemusicplayer.httpService.DownloadImageTask;
-import com.example.sharemusicplayer.httpService.UserService;
-import com.example.sharemusicplayer.login.LoginActivity;
+import com.example.sharemusicplayer.httpService.PlaceService;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.disposables.Disposable;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class PersonalActivity extends AppCompatActivity {
+public class InitPlaceActivity extends AppCompatActivity {
 
-    UserService userService = UserService.getInstance();
-    User user;
-    TextView userName;
-    TextView nickName;
-    CircleImageView personImage;
-    AppCompatButton logoutBtn;
-
+    Toolbar myToolbar;
     private static final int WRITE_EXTERNAL_STORAGE_CODE = 0;
     private static final int ImageCode = 1;
+    Place createPlace = new Place(); // 当前创建的圈子
+    private ImageView imageView;
+
+    EditText nameTex;
+    EditText desNameTex;
+    EditText labelTex;
+
+    PlaceService placeService = PlaceService.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_personal);
-        userName = findViewById(R.id.username_tex);
-        nickName = findViewById(R.id.nick_name_tex);
-        personImage = findViewById(R.id.person_image);
-        logoutBtn = findViewById(R.id.logout);
+        setContentView(R.layout.activity_init_place);
 
-        logoutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-                // 返回登陆界面
-                Intent intentToLogin = new Intent(PersonalActivity.this, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intentToLogin);
-            }
-        });
+        myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
+        getSupportActionBar().setDisplayShowTitleEnabled(false);    // 不显示标题
 
-        userService.currentUser.subscribe(new Observer<User>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
 
-            }
-
-            @Override
-            public void onNext(@NonNull User user) {
-                PersonalActivity.this.user = user;
-                updateMessage(user);
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
-
-            }
-        });
-
-        // 修改头像
-        findViewById(R.id.visitor_image_container).setOnClickListener(new View.OnClickListener() {
+        // 修改圈子封面
+        imageView = findViewById(R.id.image);
+        nameTex = findViewById(R.id.place_name_tex);
+        desNameTex = findViewById(R.id.place_des_tex);
+        labelTex = findViewById(R.id.place_label);
+        findViewById(R.id.image_container).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 判断是否有相册权限
-                if (ContextCompat.checkSelfPermission(PersonalActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                if (ContextCompat.checkSelfPermission(InitPlaceActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(PersonalActivity.this,
+                    ActivityCompat.requestPermissions(InitPlaceActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_EXTERNAL_STORAGE_CODE);
                 } else {
                     openCamera();
@@ -104,6 +77,35 @@ public class PersonalActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.save_menu, menu);
+
+        MenuItem saveItem = menu.findItem(R.id.action_save);
+        saveItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 保存圈子信息 进入添加用户步骤
+                createPlace.setName(nameTex.getText().toString());
+                createPlace.setDesName(desNameTex.getText().toString());
+                createPlace.setLabel(labelTex.getText().toString());
+
+                placeService.createPlace(createPlace, new BaseHttpService.CallBack() {
+                    @Override
+                    public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
+                        Intent intent = new Intent(InitPlaceActivity.this, ChooseUserActivity.class);
+                        intent.putExtra(ChooseUserActivity.PLACE_ID, ((Place) result.getData()).getId());
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                return false;
+            }
+        });
+        return true;
     }
 
     @Override
@@ -116,7 +118,7 @@ public class PersonalActivity extends AppCompatActivity {
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openCamera();
                 } else {
-                    Snackbar.make(personImage, "请允许打开相册权限!", Snackbar.LENGTH_SHORT)
+                    Snackbar.make(myToolbar, "请允许打开相册权限!", Snackbar.LENGTH_SHORT)
                             .show();
                 }
                 return;
@@ -140,16 +142,15 @@ public class PersonalActivity extends AppCompatActivity {
                             MediaType MEDIA_TYPE_PNG = MediaType.parse("image/*");
                             final RequestBody req = new MultipartBody.Builder().setType(MultipartBody.FORM).addFormDataPart("file", file.getName(), RequestBody.create(MEDIA_TYPE_PNG, file))
                                     .build();
-                            userService.uploadImage(req, new BaseHttpService.CallBack() {
+                            placeService.uploadImage(req, new BaseHttpService.CallBack() {
                                 @Override
                                 public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
-                                    user.setImageUrl((String) result.getData());
-                                    updateMessage(user);
-                                    userService.currentUser.onNext(user);
+                                    String url = (String) result.getData();
+                                    createPlace.setPicUrl(url);
+                                    new DownloadImageTask(imageView)
+                                            .execute(BaseHttpService.BASE_URL + url);
                                 }
                             });
-
-
                         }
                     }
                 }
@@ -177,29 +178,5 @@ public class PersonalActivity extends AppCompatActivity {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
         startActivityForResult(photoPickerIntent, ImageCode);
-    }
-
-
-    /**
-     * 更新用户信息
-     * @param user
-     */
-    public void updateMessage(User user) {
-        userName.setText(user.getUsername());
-        nickName.setText(user.getNickName());
-
-        if (user.getImageUrl() != null && !user.getImageUrl().equals("")) {
-            String urlString = BaseHttpService.BASE_URL + user.getImageUrl();
-            new DownloadImageTask(personImage)
-                    .execute(urlString);
-        }
-    }
-
-    private void logout() {
-        // 退出登陆 修改basehttp token信息 并修改数据库中token
-        BaseHttpService.setToken("");
-        SharedPreferences.Editor edit = PersonalActivity.this.getSharedPreferences("user_message", MODE_PRIVATE).edit();
-        edit.putString("token", "");
-        edit.apply();
     }
 }

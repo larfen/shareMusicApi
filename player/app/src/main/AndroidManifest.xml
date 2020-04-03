@@ -14,7 +14,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".personal.PersonalActivity"></activity>
+        <activity android:name=".myPlace.activities.NewMessageActivity"></activity>
+        <activity android:name=".myPlace.activities.MyPlaceActivity" />
+        <activity android:name=".myPlace.activities.ChooseUserActivity" />
+        <activity android:name=".myPlace.activities.InitPlaceActivity" />
+        <activity android:name=".personal.PersonalActivity" />
         <activity android:name=".recommend.activities.TopListActivity" />
         <activity android:name=".musicPlayer.activities.SearchActivity">
             <meta-data

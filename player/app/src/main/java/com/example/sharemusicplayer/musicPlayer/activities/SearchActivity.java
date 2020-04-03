@@ -5,6 +5,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import com.example.sharemusicplayer.R;
 import com.example.sharemusicplayer.entity.Song;
 import com.example.sharemusicplayer.httpService.BaseHttpService;
 import com.example.sharemusicplayer.musicPlayer.view.SongsAdapter;
+import com.google.gson.Gson;
 
 public class SearchActivity extends PlayerActivity {
 
@@ -20,6 +23,9 @@ public class SearchActivity extends PlayerActivity {
     private SongsAdapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private Song[] searchSongs = {};
+
+    public static final String GET_RESULT = "get_result";
+    public static final String SONG_RESULT = "song_result";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +40,20 @@ public class SearchActivity extends PlayerActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        // 当点击时 切换播放列表
-        mAdapter = new SongsAdapter(searchSongs, new SongsAdapter.SongClickListener() {
-            @Override
-            public void onClick(Song song, int position) {
-                setPlayList(searchSongs, position);
-                replay();
-            }
-        });
 
+        String action = getIntent().getAction();
+        if (action == null) {
+            mAdapter = new SongsAdapter(searchSongs, new SearchAndListener());
+        } else {
+            switch (action) {
+                case GET_RESULT:
+                    mAdapter = new SongsAdapter(searchSongs, new SearchAndResult());
+                    break;
+                default:
+                    mAdapter = new SongsAdapter(searchSongs, new SearchAndListener());
+                    break;
+            }
+        }
         recyclerView.setAdapter(mAdapter);
     }
 
@@ -75,5 +86,31 @@ public class SearchActivity extends PlayerActivity {
             }
         });
         return true;
+    }
+
+    /**
+     * 点击搜索结果后播放
+     */
+    private class SearchAndListener implements SongsAdapter.SongClickListener {
+
+        @Override
+        public void onClick(Song song, int position) {
+            setPlayList(searchSongs, position);
+            replay();
+        }
+    }
+
+    /**
+     * 点击搜索结果后回调结果
+     */
+    private class SearchAndResult implements SongsAdapter.SongClickListener {
+
+        @Override
+        public void onClick(Song song, int position) {
+            Intent returnIntent = new Intent();
+            returnIntent.putExtra(SONG_RESULT, new Gson().toJson(song));
+            setResult(Activity.RESULT_OK, returnIntent);
+            finish();
+        }
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public interface UserService {
     String tokenHeader = "Authorization";
@@ -18,4 +19,6 @@ public interface UserService {
 
     // 修改头像
     String changeImage(MultipartFile file, User user);
+
+    List<User> getAll();
 }

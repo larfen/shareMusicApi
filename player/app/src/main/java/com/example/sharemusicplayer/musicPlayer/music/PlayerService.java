@@ -30,6 +30,7 @@ public class PlayerService extends Service {
     SongService songService = SongService.getInstance();
     BehaviorSubject<Song> nowPlayingMusic = BehaviorSubject.createDefault(new Song());  // 当前播放的音乐
     public BehaviorSubject<Boolean> playing = BehaviorSubject.createDefault(false);    // 是否在播放音乐
+    NullSongLink nullSongLink;
 
 
     private final IBinder mBinder = new LocalBinder();
@@ -105,13 +106,17 @@ public class PlayerService extends Service {
                 mediaPlayer.start();
             } else {
                 // 如果歌曲链接不存在 尝试根据歌曲id获取歌曲链接
-                Song song = songList[position];
+                final Song song = songList[position];
                 if (song.getSong_url() == null && song.getSong_id() != null) {
                     songService.songLink(new BaseHttpService.CallBack() {
                         @Override
                         public void onSuccess(BaseHttpService.HttpTask.CustomerResponse result) {
                             String link = (String) result.getData();
-                            playByUrl(link);
+                            if (link == null && nullSongLink != null) {
+                                nullSongLink.nullSongLink(song);
+                            } else {
+                                playByUrl(link);
+                            }
                         }
                     }, song.getSong_id());
                 } else {
@@ -234,5 +239,13 @@ public class PlayerService extends Service {
             // Return this instance of PlayerService so clients can call public methods
             return PlayerService.this;
         }
+    }
+
+    public void setNullSongLink(NullSongLink nullSongLink) {
+        this.nullSongLink = nullSongLink;
+    }
+
+    public interface NullSongLink {
+        void nullSongLink(Song song);
     }
 }
